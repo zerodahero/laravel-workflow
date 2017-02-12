@@ -5,9 +5,9 @@
     "license": "MIT",
     "require": {
         "php": ">=5.5.9",
-        "symfony/workflow": "^3.2",
-        "symfony/process": "^3.2",
-        "symfony/event-dispatcher": "^3.2",
+        "symfony/workflow": "3.2.*",
+        "symfony/process": "3.1.*",
+        "symfony/event-dispatcher": "3.1.*",
         "illuminate/console": "5.3.*"
     },
     "autoload": {

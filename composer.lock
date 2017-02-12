@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "18765262ab0b975abe8405a7b2f69fc3",
+    "content-hash": "3b706b3b30ff79d3663431ceae41cfc8",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -490,28 +490,25 @@
         },
         {
             "name": "symfony/event-dispatcher",
-            "version": "dev-master",
+            "version": "3.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/event-dispatcher.git",
-                "reference": "48e343e59e7c7f7cb6171b919082fb4a18df89a6"
+                "reference": "652fe5441bd5699654662e11defa73e779eacca1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/48e343e59e7c7f7cb6171b919082fb4a18df89a6",
-                "reference": "48e343e59e7c7f7cb6171b919082fb4a18df89a6",
+                "url": "https://api.github.com/repos/symfony/event-dispatcher/zipball/652fe5441bd5699654662e11defa73e779eacca1",
+                "reference": "652fe5441bd5699654662e11defa73e779eacca1",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.5.9"
             },
-            "conflict": {
-                "symfony/dependency-injection": "<3.3"
-            },
             "require-dev": {
                 "psr/log": "~1.0",
                 "symfony/config": "~2.8|~3.0",
-                "symfony/dependency-injection": "~3.3",
+                "symfony/dependency-injection": "~2.8|~3.0",
                 "symfony/expression-language": "~2.8|~3.0",
                 "symfony/stopwatch": "~2.8|~3.0"
             },
@@ -522,7 +519,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.3-dev"
+                    "dev-master": "3.1-dev"
                 }
             },
             "autoload": {
@@ -549,7 +546,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2017-02-02 13:15:15"
+            "time": "2017-01-02 20:31:54"
         },
         {
             "name": "symfony/inflector",
@@ -728,16 +725,16 @@
         },
         {
             "name": "symfony/process",
-            "version": "dev-master",
+            "version": "3.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/process.git",
-                "reference": "37d005254947477f31d6878996b9adcafb2d3c44"
+                "reference": "2605753c5f8c531623d24d002825ebb1d6a22248"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/process/zipball/37d005254947477f31d6878996b9adcafb2d3c44",
-                "reference": "37d005254947477f31d6878996b9adcafb2d3c44",
+                "url": "https://api.github.com/repos/symfony/process/zipball/2605753c5f8c531623d24d002825ebb1d6a22248",
+                "reference": "2605753c5f8c531623d24d002825ebb1d6a22248",
                 "shasum": ""
             },
             "require": {
@@ -746,7 +743,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.3-dev"
+                    "dev-master": "3.1-dev"
                 }
             },
             "autoload": {
@@ -773,7 +770,7 @@
             ],
             "description": "Symfony Process Component",
             "homepage": "https://symfony.com",
-            "time": "2017-02-08 15:45:40"
+            "time": "2017-01-21 17:13:55"
         },
         {
             "name": "symfony/property-access",
@@ -909,16 +906,16 @@
         },
         {
             "name": "symfony/workflow",
-            "version": "dev-master",
+            "version": "3.2.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/workflow.git",
-                "reference": "c5659137631641af4bcc4800f3ed0cc3c3dd0f2a"
+                "reference": "9d62c42951f25b184de488d21cc3ee6cc48a8214"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/workflow/zipball/c5659137631641af4bcc4800f3ed0cc3c3dd0f2a",
-                "reference": "c5659137631641af4bcc4800f3ed0cc3c3dd0f2a",
+                "url": "https://api.github.com/repos/symfony/workflow/zipball/9d62c42951f25b184de488d21cc3ee6cc48a8214",
+                "reference": "9d62c42951f25b184de488d21cc3ee6cc48a8214",
                 "shasum": ""
             },
             "require": {
@@ -932,7 +929,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.3-dev"
+                    "dev-master": "3.2-dev"
                 }
             },
             "autoload": {
@@ -966,7 +963,7 @@
                 "transition",
                 "workflow"
             ],
-            "time": "2017-01-21 17:10:26"
+            "time": "2017-01-18 05:35:58"
         }
     ],
     "packages-dev": [
