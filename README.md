@@ -13,7 +13,7 @@ Add a ServiceProvider to your providers array in `config/app.php`:
 ```php
 'providers' => [
     ...
-	'Brexis\LaravelWorkflow\ServiceProvider',
+    Brexis\LaravelWorkflow\ServiceProvider::class,
 
 ]
 ```
@@ -21,7 +21,8 @@ Add a ServiceProvider to your providers array in `config/app.php`:
 Add the `Workflow` facade to your facades array:
 
 ```php
-	'Workflow' => 'Brexis\LaravelWorkflow\Facades\WorkflowFacade',
+    ...
+    'Workflow' => Brexis\LaravelWorkflow\Facades\WorkflowFacade::class,
 ```
 
 
