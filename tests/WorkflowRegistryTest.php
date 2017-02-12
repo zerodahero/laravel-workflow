@@ -1,6 +1,6 @@
 <?php
 use PHPUnit\Framework\TestCase;
-use LaravelWorkflow\WorkflowRegistry;
+use Brexis\LaravelWorkflow\WorkflowRegistry;
 use Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore;
 use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
 use Symfony\Component\Workflow\Workflow;

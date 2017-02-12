@@ -1,7 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
-use LaravelWorkflow\Commands\WorkflowDumpCommand;
-use LaravelWorkflow\WorkflowRegistry;
+use Brexis\LaravelWorkflow\Commands\WorkflowDumpCommand;
+use Brexis\LaravelWorkflow\WorkflowRegistry;
 
 $config = [
     'straight'   => [

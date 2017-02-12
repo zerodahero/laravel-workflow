@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelWorkflow\Commands;
+namespace Brexis\LaravelWorkflow\Commands;
 
 use Config;
 use Exception;

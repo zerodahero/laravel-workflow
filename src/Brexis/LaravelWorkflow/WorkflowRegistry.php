@@ -1,8 +1,8 @@
 <?php
 
-namespace LaravelWorkflow;
+namespace Brexis\LaravelWorkflow;
 
-use LaravelWorkflow\Events\EventDispatcher;
+use Brexis\LaravelWorkflow\Events\EventDispatcher;
 use Symfony\Component\Workflow\Definition;
 use Symfony\Component\Workflow\DefinitionBuilder;
 use Symfony\Component\Workflow\MarkingStore\MarkingStoreInterface;

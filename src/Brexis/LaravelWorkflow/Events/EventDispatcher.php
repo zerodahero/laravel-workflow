@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelWorkflow\Events;
+namespace Brexis\LaravelWorkflow\Events;
 
 use Event as LaravelEvent;
 use Symfony\Component\EventDispatcher\Event;

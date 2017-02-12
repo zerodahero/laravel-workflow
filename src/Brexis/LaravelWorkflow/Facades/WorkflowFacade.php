@@ -1,6 +1,6 @@
 <?php
 
-namespace LaravelWorkflow\Facades;
+namespace Brexis\LaravelWorkflow\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
