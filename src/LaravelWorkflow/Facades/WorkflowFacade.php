@@ -1,6 +1,6 @@
 <?php
 
-namespace Picr\LaravelWorkflow\Facades;
+namespace LaravelWorkflow\Facades;
 
 use Illuminate\Support\Facades\Facade;
 

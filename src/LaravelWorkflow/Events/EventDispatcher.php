@@ -1,6 +1,6 @@
 <?php
 
-namespace Picr\LaravelWorkflow\Events;
+namespace LaravelWorkflow\Events;
 
 use Event as LaravelEvent;
 use Symfony\Component\EventDispatcher\Event;
@@ -39,9 +39,14 @@ class EventDispatcher implements EventDispatcherInterface
         // TODO: Implement getListeners() method.
     }
 
+
+    public function getListenerPriority($eventName, $listener)
+    {
+        // TODO: Implement getListenerPriority() method.
+    }
+
     public function hasListeners($eventName = null)
     {
         // TODO: Implement hasListeners() method.
     }
-
 }

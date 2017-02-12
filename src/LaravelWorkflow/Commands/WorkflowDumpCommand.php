@@ -1,25 +1,25 @@
 <?php
 
-namespace Picr\LaravelWorkflow\Commands;
+namespace LaravelWorkflow\Commands;
 
 use Config;
 use Exception;
 use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Workflow\Dumper\GraphvizDumper;
-use ReflectionProperty;
+use Symfony\Component\Workflow\Workflow as SynfonyWorkflow;
 use Workflow;
 
-class WorkflowGraphvizDumpCommand extends Command
+class WorkflowDumpCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'workflow:graphviz-dump
+    protected $signature = 'workflow:dump
         {workflow : name of workflow from configuration}
-        {--format= : graphics format output}';
+        {--format=png}';
 
     /**
      * The console command description.
@@ -38,30 +38,27 @@ class WorkflowGraphvizDumpCommand extends Command
     {
         $workflowName = $this->argument('workflow');
         $config = Config::get('workflow');
+
         if (!isset($config[$workflowName])) {
-            throw new Exception("There is not a workflow called $workflowName configured.");
+            throw new Exception("Workflow $workflowName is not configured.");
         }
+
         $className = $config[$workflowName]['supports'][0]; // todo: add option to select single class?
 
         $workflow = Workflow::get(new $className, $workflowName);
 
-        $property = new ReflectionProperty($workflow, 'definition');
+        $property = new \ReflectionProperty(SynfonyWorkflow::class, 'definition');
         $property->setAccessible(true);
         $definition = $property->getValue($workflow);
 
         $dumper = new GraphvizDumper();
 
-        if (! $outputType = $this->option('format')) {
-            $this->output->writeln($dumper->dump($definition));
+        $format = $this->option('format');
 
-            return;
-        }
+        $dotCommand = "dot -T$format -o $workflowName.$format";
 
-        $process = new Process('dot -T' . $outputType);
+        $process = new Process($dotCommand);
         $process->setInput($dumper->dump($definition));
         $process->mustRun();
-        $output = $process->getOutput();
-        file_put_contents($workflowName . '.' . $outputType, $output);
-
     }
 }
