@@ -2,7 +2,8 @@
 
 namespace Brexis\LaravelWorkflow;
 
-use Brexis\LaravelWorkflow\Events\EventDispatcher;
+use Brexis\LaravelWorkflow\Events\WorkflowSubscriber;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Workflow\Definition;
 use Symfony\Component\Workflow\DefinitionBuilder;
 use Symfony\Component\Workflow\MarkingStore\MarkingStoreInterface;
@@ -25,10 +26,19 @@ class WorkflowRegistry
      */
     private $config;
 
+    /**
+     * @var EventDispatcher
+     */
+    private $dispatcher;
+
     public function __construct(array $config)
     {
-        $this->registry = new Registry();
-        $this->config = $config;
+        $this->registry     = new Registry();
+        $this->config       = $config;
+        $this->dispatcher   = new EventDispatcher();
+
+        $subscriber         = new WorkflowSubscriber();
+        $this->dispatcher->addSubscriber($subscriber);
 
         foreach ($this->config as $name => $workflowData) {
             $builder = new DefinitionBuilder($workflowData['places']);
@@ -88,7 +98,7 @@ class WorkflowRegistry
             $className = $workflowData['class'];
         }
 
-        return new $className($definition, $markingStore, new EventDispatcher(), $name);
+        return new $className($definition, $markingStore, $this->dispatcher, $name);
     }
 
     /**
