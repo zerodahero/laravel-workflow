@@ -47,11 +47,22 @@ class WorkflowRegistry
         }
     }
 
+    /**
+     * Return the $subject workflo
+     * @param  object $subject
+     * @param  string $workflowName
+     * @return Workflow
+     */
     public function get($subject, $workflowName = null)
     {
         return $this->registry->get($subject, $workflowName);
     }
 
+    /**
+     * Add a workflow to the subject
+     * @param Workflow $workflow
+     * @param Symfony\Component\Workflow\SupportStrategy\SupportStrategyInterface $supportStrategy
+     */
     public function add(Workflow $workflow, $supportStrategy)
     {
         return $this->registry->add($workflow, $supportStrategy);
