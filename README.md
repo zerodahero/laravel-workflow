@@ -117,7 +117,7 @@ $post->save();
 ```
 
 ### Dump Workflows
-Symfony workflow use GraphvizDumper to create the workflow image. You may need to install the `dot` command of [Graphviz](http://www.graphviz.org/)
+Symfony workflow uses GraphvizDumper to create the workflow image. You may need to install the `dot` command of [Graphviz](http://www.graphviz.org/)
 
     php artisan workflow:dump workflow_name
 
