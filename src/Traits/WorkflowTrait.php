@@ -6,13 +6,13 @@ use Workflow;
 
 trait WorkflowTrait
 {
-    public function workflow_can($object, $transition, $workflow = null)
+    public function workflow_can($transition, $workflow = null)
     {
-        return Workflow::get($object, $workflow)->can($object, $transition);
+        return Workflow::get($this, $workflow)->can($this, $transition);
     }
 
-    public function workflow_transitions($object)
+    public function workflow_transitions()
     {
-        return Workflow::get($object)->getEnabledTransitions($object);
+        return Workflow::get($this)->getEnabledTransitions($this);
     }
 }
