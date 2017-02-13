@@ -78,7 +78,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Brexis\LaravelWorkflow\Traits\WorkflowTrait;
 
-class Order extends Model
+class BlogPost extends Model
 {
   use WorkflowTrait;
 
