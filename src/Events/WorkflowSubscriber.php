@@ -17,19 +17,11 @@ class WorkflowSubscriber implements EventSubscriberInterface
     }
 
     public function transitionEvent(Event $event) {
-        event(new Leave($event));
+        event(new Transition($event));
     }
 
     public function enterEvent(Event $event) {
         event(new Enter($event));
-    }
-
-    public function enteredEvent(Event $event) {
-        event(new Entered($event));
-    }
-
-    public function announceEvent(Event $event) {
-        event(new Announce($event));
     }
 
     public static function getSubscribedEvents()
@@ -38,9 +30,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
             'workflow.guard'        => ['guardEvent'],
             'workflow.leave'        => ['leaveEvent'],
             'workflow.transition'   => ['transitionEvent'],
-            'workflow.enter'        => ['enterEvent'],
-            'workflow.entered'      => ['enteredEvent'],
-            'workflow.announce'     => ['announceEvent']
+            'workflow.enter'        => ['enterEvent']
         ];
     }
 }

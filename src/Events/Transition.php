@@ -4,7 +4,7 @@ namespace Brexis\LaravelWorkflow\Events;
 
 use Symfony\Component\Workflow\Event\Event;
 
-class Entered
+class Transition
 {
     /**
      * @var Event
