@@ -18,7 +18,7 @@ class WorkflowServiceProvider extends ServiceProvider
     */
     public function boot()
     {
-        $configPath = __DIR__ . '/../../config/config.php';
+        $configPath = __DIR__ . '/../config/config.php';
 
         $this->publishes([$configPath => config_path('workflow.php')], 'config');
     }
