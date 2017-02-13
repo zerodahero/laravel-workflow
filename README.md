@@ -116,6 +116,88 @@ $post->workflow_apply('publish');
 $post->save();
 ```
 
+### Use the events
+This package provides a list of event fired during a transition
+
+```php
+    Brexis\LaravelWorkflow\Events\Guard
+    Brexis\LaravelWorkflow\Events\Leave
+    Brexis\LaravelWorkflow\Events\Transition
+    Brexis\LaravelWorkflow\Events\Enter
+```
+
+You can subscribe to an event
+
+```php
+<?php
+
+namespace App\Listeners;
+
+use Symfony\Component\Workflow\Event\GuardEvent;
+use Symfony\Component\Workflow\Event\Event;
+
+class BlogPostWorkflowSubscriber
+{
+    /**
+     * Handle workflow guard events.
+     */
+    public function onGuard(GuardEvent $event) {
+        /** @var App\BlogPost $post */
+        $post = $event->getSubject();
+        $title = $post->title;
+
+        if (empty($title)) {
+            // Posts with no title should not be allowed
+            $event->setBlocked(true);
+        }
+    }
+
+    /**
+     * Handle workflow leave event.
+     */
+    public function onLeave(Event $event) {}
+
+    /**
+     * Handle workflow transition event.
+     */
+    public function onTransition(Event $event) {}
+
+    /**
+     * Handle workflow enter event.
+     */
+    public function onEnter(Event $event) {}
+
+    /**
+     * Register the listeners for the subscriber.
+     *
+     * @param  Illuminate\Events\Dispatcher  $events
+     */
+    public function subscribe($events)
+    {
+        $events->listen(
+            'Brexis\LaravelWorkflow\Events\Guard',
+            'App\Listeners\BlogPostWorkflowSubscriber@onGuard'
+        );
+
+        $events->listen(
+            'Brexis\LaravelWorkflow\Events\Leave',
+            'App\Listeners\UserEventSubscriber@onLeave'
+        );
+
+        $events->listen(
+            'Brexis\LaravelWorkflow\Events\Transition',
+            'App\Listeners\UserEventSubscriber@onTransition'
+        );
+
+        $events->listen(
+            'Brexis\LaravelWorkflow\Events\Enter',
+            'App\Listeners\UserEventSubscriber@onEnter'
+        );
+    }
+
+}
+```
+
 ### Dump Workflows
 Symfony workflow uses GraphvizDumper to create the workflow image. You may need to install the `dot` command of [Graphviz](http://www.graphviz.org/)
 
