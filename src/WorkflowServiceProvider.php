@@ -3,7 +3,6 @@
 namespace Brexis\LaravelWorkflow;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Blade;
 
 class WorkflowServiceProvider extends ServiceProvider
 {
@@ -21,8 +20,6 @@ class WorkflowServiceProvider extends ServiceProvider
         $configPath = __DIR__ . '/../config/config.php';
 
         $this->publishes([$configPath => config_path('workflow.php')], 'config');
-
-        $this->registerBladeExtensions();
     }
 
     /**
@@ -39,24 +36,6 @@ class WorkflowServiceProvider extends ServiceProvider
                 return new WorkflowRegistry($app['config']['workflow']);
             }
         );
-    }
-
-    /**
-     * Register blades extensions
-     */
-    private function registerBladeExtensions()
-    {
-        Blade::directive('workflow_can', function ($object, $transitionName, $workflowName = null) {
-            $workflow = Workflow::get($object, $workflowName);
-
-            return $workflow->can($object, $transitionName);
-        });
-
-        Blade::directive('workflow_transitions', function ($object) {
-            $workflow = Workflow::get($object);
-
-            return $workflow->getEnabledTransitions($object);
-        });
     }
 
     /**
