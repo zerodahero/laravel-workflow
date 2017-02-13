@@ -2,9 +2,10 @@
 
 namespace Brexis\LaravelWorkflow;
 
+use Illuminate\Support\ServiceProvider;
 use WorkflowRegistry;
 
-class ServiceProvider extends ServiceProvider
+class WorkflowServiceProvider extends ServiceProvider
 {
     protected $commands = [
         'Brexis\LaravelWorkflow\Commands\WorkflowDumpCommand',

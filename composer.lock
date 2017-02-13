@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "77883809938f7795bb836b1de06cecfa",
+    "content-hash": "c5dea795dd6604bf23588d75453e8059",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -75,34 +75,34 @@
         },
         {
             "name": "illuminate/console",
-            "version": "5.3.x-dev",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/console.git",
-                "reference": "92e04079327e9634053b06d5003a00906be6f966"
+                "reference": "6d85ccd08b6337eb7275f1d4d1e70589d0b4af6c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/console/zipball/92e04079327e9634053b06d5003a00906be6f966",
-                "reference": "92e04079327e9634053b06d5003a00906be6f966",
+                "url": "https://api.github.com/repos/illuminate/console/zipball/6d85ccd08b6337eb7275f1d4d1e70589d0b4af6c",
+                "reference": "6d85ccd08b6337eb7275f1d4d1e70589d0b4af6c",
                 "shasum": ""
             },
             "require": {
-                "illuminate/contracts": "5.3.*",
-                "illuminate/support": "5.3.*",
+                "illuminate/contracts": "5.5.*",
+                "illuminate/support": "5.5.*",
                 "nesbot/carbon": "~1.20",
-                "php": ">=5.6.4",
-                "symfony/console": "3.1.*"
+                "php": ">=7.0",
+                "symfony/console": "~3.2"
             },
             "suggest": {
-                "guzzlehttp/guzzle": "Required to use the ping methods on schedules (~5.3|~6.0).",
+                "guzzlehttp/guzzle": "Required to use the ping methods on schedules (~6.0).",
                 "mtdowling/cron-expression": "Required to use scheduling component (~1.0).",
-                "symfony/process": "Required to use scheduling component (3.1.*)."
+                "symfony/process": "Required to use scheduling component (~3.2)."
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.3-dev"
+                    "dev-master": "5.5-dev"
                 }
             },
             "autoload": {
@@ -122,29 +122,29 @@
             ],
             "description": "The Illuminate Console package.",
             "homepage": "https://laravel.com",
-            "time": "2017-01-06 14:26:42"
+            "time": "2017-01-30 22:05:16"
         },
         {
             "name": "illuminate/contracts",
-            "version": "5.3.x-dev",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/contracts.git",
-                "reference": "ebed2e6d1203d7fad2db7184e7a6f18d636bca8d"
+                "reference": "981b767f2eec48664ed0f7207a372ddf3c1ec5fb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/contracts/zipball/ebed2e6d1203d7fad2db7184e7a6f18d636bca8d",
-                "reference": "ebed2e6d1203d7fad2db7184e7a6f18d636bca8d",
+                "url": "https://api.github.com/repos/illuminate/contracts/zipball/981b767f2eec48664ed0f7207a372ddf3c1ec5fb",
+                "reference": "981b767f2eec48664ed0f7207a372ddf3c1ec5fb",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6.4"
+                "php": ">=7.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.3-dev"
+                    "dev-master": "5.5-dev"
                 }
             },
             "autoload": {
@@ -164,41 +164,40 @@
             ],
             "description": "The Illuminate Contracts package.",
             "homepage": "https://laravel.com",
-            "time": "2016-12-23 01:26:32"
+            "time": "2017-02-10 21:32:45"
         },
         {
             "name": "illuminate/support",
-            "version": "5.3.x-dev",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/illuminate/support.git",
-                "reference": "18c5e857f2ee5e2ac61221b6ff444d309d170bf9"
+                "reference": "1ea50a4359bc346ad3f9a804ee43ba023fccd27c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/illuminate/support/zipball/18c5e857f2ee5e2ac61221b6ff444d309d170bf9",
-                "reference": "18c5e857f2ee5e2ac61221b6ff444d309d170bf9",
+                "url": "https://api.github.com/repos/illuminate/support/zipball/1ea50a4359bc346ad3f9a804ee43ba023fccd27c",
+                "reference": "1ea50a4359bc346ad3f9a804ee43ba023fccd27c",
                 "shasum": ""
             },
             "require": {
                 "doctrine/inflector": "~1.0",
                 "ext-mbstring": "*",
-                "illuminate/contracts": "5.3.*",
-                "paragonie/random_compat": "~1.4|~2.0",
-                "php": ">=5.6.4"
+                "illuminate/contracts": "5.5.*",
+                "php": ">=7.0"
             },
             "replace": {
                 "tightenco/collect": "self.version"
             },
             "suggest": {
                 "illuminate/filesystem": "Required to use the composer class (5.2.*).",
-                "symfony/process": "Required to use the composer class (3.1.*).",
-                "symfony/var-dumper": "Required to use the dd function (3.1.*)."
+                "symfony/process": "Required to use the composer class (~3.2).",
+                "symfony/var-dumper": "Required to use the dd function (~3.2)."
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.3-dev"
+                    "dev-master": "5.5-dev"
                 }
             },
             "autoload": {
@@ -221,7 +220,7 @@
             ],
             "description": "The Illuminate Support package.",
             "homepage": "https://laravel.com",
-            "time": "2016-12-28 19:33:33"
+            "time": "2017-02-12 14:42:51"
         },
         {
             "name": "nesbot/carbon",
@@ -373,16 +372,16 @@
         },
         {
             "name": "symfony/console",
-            "version": "3.1.x-dev",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "047f16485d68c083bd5d9b73ff16f9cb9c1a9f52"
+                "reference": "28698ac32c2694d4a3de8b17bf02fab2b7598ce0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/047f16485d68c083bd5d9b73ff16f9cb9c1a9f52",
-                "reference": "047f16485d68c083bd5d9b73ff16f9cb9c1a9f52",
+                "url": "https://api.github.com/repos/symfony/console/zipball/28698ac32c2694d4a3de8b17bf02fab2b7598ce0",
+                "reference": "28698ac32c2694d4a3de8b17bf02fab2b7598ce0",
                 "shasum": ""
             },
             "require": {
@@ -390,20 +389,27 @@
                 "symfony/debug": "~2.8|~3.0",
                 "symfony/polyfill-mbstring": "~1.0"
             },
+            "conflict": {
+                "symfony/dependency-injection": "<3.3"
+            },
             "require-dev": {
                 "psr/log": "~1.0",
+                "symfony/dependency-injection": "~3.3",
                 "symfony/event-dispatcher": "~2.8|~3.0",
+                "symfony/filesystem": "~2.8|~3.0",
+                "symfony/http-kernel": "~2.8|~3.0",
                 "symfony/process": "~2.8|~3.0"
             },
             "suggest": {
                 "psr/log": "For using the console logger",
                 "symfony/event-dispatcher": "",
+                "symfony/filesystem": "",
                 "symfony/process": ""
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.1-dev"
+                    "dev-master": "3.3-dev"
                 }
             },
             "autoload": {
@@ -430,7 +436,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2017-01-08 20:43:43"
+            "time": "2017-02-06 12:04:42"
         },
         {
             "name": "symfony/debug",

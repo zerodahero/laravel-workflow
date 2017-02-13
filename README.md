@@ -13,7 +13,7 @@ Add a ServiceProvider to your providers array in `config/app.php`:
 ```php
 'providers' => [
     ...
-    Brexis\LaravelWorkflow\ServiceProvider::class,
+    Brexis\LaravelWorkflow\WorkflowServiceProvider::class,
 
 ]
 ```
