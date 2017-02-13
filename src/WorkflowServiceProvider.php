@@ -3,7 +3,6 @@
 namespace Brexis\LaravelWorkflow;
 
 use Illuminate\Support\ServiceProvider;
-use WorkflowRegistry;
 
 class WorkflowServiceProvider extends ServiceProvider
 {
