@@ -16,6 +16,11 @@
             "Brexis\\LaravelWorkflow\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.0-dev"

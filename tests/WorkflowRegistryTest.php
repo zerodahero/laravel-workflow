@@ -1,18 +1,22 @@
 <?php
+namespace Tests;
+
 use PHPUnit\Framework\TestCase;
 use Brexis\LaravelWorkflow\WorkflowRegistry;
+use ReflectionProperty;
 use Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore;
 use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
 use Symfony\Component\Workflow\Workflow;
 use Symfony\Component\Workflow\StateMachine;
+use Tests\Fixtures\TestObject;
 
 class WorkflowRegistryTest extends TestCase
 {
-    public function testIfWorkflowIsRegisrter()
+    public function testIfWorkflowIsRegistered()
     {
-        $config = [
+        $config     = [
             'straight'   => [
-                'supports'      => ['stdClass'],
+                'supports'      => ['Tests\Fixtures\TestObject'],
                 'places'        => ['a', 'b', 'c'],
                 'transitions'   => [
                     't1' => [
@@ -27,28 +31,28 @@ class WorkflowRegistryTest extends TestCase
             ]
         ];
 
-        $registry = new WorkflowRegistry($config);
-        $object = new stdClass;
-        $workflow = $registry->get($object);
+        $registry   = new WorkflowRegistry($config);
+        $subject    = new TestObject;
+        $workflow   = $registry->get($subject);
 
-        $markingProp = new \ReflectionProperty(Workflow::class, 'markingStore');
-        $markingProp->setAccessible(true);
+        $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
+        $markingStoreProp->setAccessible(true);
 
-        $marking = $markingProp->getValue($workflow);
+        $markingStore = $markingStoreProp->getValue($workflow);
 
         $this->assertTrue($workflow instanceof Workflow);
-        $this->assertTrue($marking instanceof SingleStateMarkingStore);
+        $this->assertTrue($markingStore instanceof SingleStateMarkingStore);
     }
 
-    public function testIfStateMachineIsRegisrter()
+    public function testIfStateMachineIsRegistered()
     {
-        $config = [
+        $config     = [
             'straight'   => [
                 'type'          => 'state_machine',
                 'marking_store' => [
                     'type' => 'multiple_state',
                 ],
-                'supports'      => ['stdClass'],
+                'supports'      => ['Tests\Fixtures\TestObject'],
                 'places'        => ['a', 'b', 'c'],
                 'transitions'   => [
                     't1' => [
@@ -63,16 +67,16 @@ class WorkflowRegistryTest extends TestCase
             ]
         ];
 
-        $registry = new WorkflowRegistry($config);
-        $object = new stdClass;
-        $workflow = $registry->get($object);
+        $registry   = new WorkflowRegistry($config);
+        $subject     = new TestObject;
+        $workflow   = $registry->get($subject);
 
-        $markingProp = new \ReflectionProperty(Workflow::class, 'markingStore');
-        $markingProp->setAccessible(true);
+        $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
+        $markingStoreProp->setAccessible(true);
 
-        $marking = $markingProp->getValue($workflow);
+        $markingStore = $markingStoreProp->getValue($workflow);
 
         $this->assertTrue($workflow instanceof StateMachine);
-        $this->assertTrue($marking instanceof MultipleStateMarkingStore);
+        $this->assertTrue($markingStore instanceof MultipleStateMarkingStore);
     }
 }

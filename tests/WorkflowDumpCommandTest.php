@@ -1,11 +1,40 @@
 <?php
-use PHPUnit\Framework\TestCase;
-use Brexis\LaravelWorkflow\Commands\WorkflowDumpCommand;
-use Brexis\LaravelWorkflow\WorkflowRegistry;
+namespace Tests {
 
-$config = [
+    use Brexis\LaravelWorkflow\Commands\WorkflowDumpCommand;
+    use Mockery;
+    use PHPUnit\Framework\TestCase;
+
+    class WorkflowRegistryTest extends TestCase
+    {
+        public function testWorkflowCommand()
+        {
+            $command = Mockery::mock(WorkflowDumpCommand::class)
+            ->makePartial()
+            ->shouldReceive('argument')
+            ->with('workflow')
+            ->andReturn('straight')
+            ->shouldReceive('option')
+            ->with('format')
+            ->andReturn('png')
+            ->shouldReceive('option')
+            ->with('class')
+            ->andReturn('Tests\Fixtures\TestObject')
+            ->getMock();
+
+            $command->handle();
+
+            $this->assertTrue(file_exists('straight.png'));
+        }
+    }
+}
+
+namespace {
+    use Brexis\LaravelWorkflow\WorkflowRegistry;
+
+    $config = [
     'straight'   => [
-        'supports'      => ['stdClass'],
+        'supports'      => ['Tests\Fixtures\TestObject'],
         'places'        => ['a', 'b', 'c'],
         'transitions'   => [
             't1' => [
@@ -18,49 +47,27 @@ $config = [
             ]
         ],
     ]
-];
+    ];
 
-class Config
-{
-    public static function get($name)
+    class Workflow
     {
-        global $config;
+        public static function get($object, $name)
+        {
+            global $config;
 
-        return $config;
+            $workflowRegistry = new WorkflowRegistry($config);
+
+            return $workflowRegistry->get($object, $name);
+        }
     }
-}
 
-class Workflow
-{
-    public static function get($object, $name)
+    class Config
     {
-        global $config;
+        public static function get($name)
+        {
+            global $config;
 
-        $workflowRegistry = new WorkflowRegistry($config);
-
-        return $workflowRegistry->get($object, $name);
-    }
-}
-
-class WorkflowRegistryTest extends TestCase
-{
-    public function testWorkflowCommand()
-    {
-        $command = Mockery::mock(WorkflowDumpCommand::class)
-        ->makePartial()
-        ->shouldReceive('argument')
-        ->with('workflow')
-        ->andReturn('straight')
-        ->shouldReceive('option')
-        ->with('format')
-        ->andReturn('png')
-        ->shouldReceive('option')
-        ->with('class')
-        ->andReturn('stdClass')
-        ->getMock();
-
-        $command->handle();
-
-        $this->assertTrue(file_exists('straight.png'));
+            return $config;
+        }
     }
 }
