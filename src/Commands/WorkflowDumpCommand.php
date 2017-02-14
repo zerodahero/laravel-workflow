@@ -19,7 +19,8 @@ class WorkflowDumpCommand extends Command
      */
     protected $signature = 'workflow:dump
         {workflow : name of workflow from configuration}
-        {--format=png}';
+        {--class= : the support class name}
+        {--format=png : the image format}';
 
     /**
      * The console command description.
@@ -36,24 +37,24 @@ class WorkflowDumpCommand extends Command
      */
     public function handle()
     {
-        $workflowName = $this->argument('workflow');
-        $config = Config::get('workflow');
+        $workflowName   = $this->argument('workflow');
+        $format         = $this->option('format');
+        $class          = $this->option('class');
+        $config         = Config::get('workflow');
 
         if (!isset($config[$workflowName])) {
             throw new Exception("Workflow $workflowName is not configured.");
         }
 
-        $className = $config[$workflowName]['supports'][0]; // todo: add option to select single class?
+        if (false === array_search($class, $config[$workflowName]['supports'])) {
+            throw new Exception("Workflow $workflowName has no support for class $class");
+        }
 
-        $workflow = Workflow::get(new $className, $workflowName);
-
-        $property = new \ReflectionProperty(SynfonyWorkflow::class, 'definition');
-        $property->setAccessible(true);
-        $definition = $property->getValue($workflow);
+        $subject    = new $class;
+        $workflow   = Workflow::get($subject, $workflowName);
+        $definition = $workflow->getDefinition();
 
         $dumper = new GraphvizDumper();
-
-        $format = $this->option('format');
 
         $dotCommand = "dot -T$format -o $workflowName.$format";
 

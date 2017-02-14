@@ -54,6 +54,9 @@ class WorkflowRegistryTest extends TestCase
         ->shouldReceive('option')
         ->with('format')
         ->andReturn('png')
+        ->shouldReceive('option')
+        ->with('class')
+        ->andReturn('stdClass')
         ->getMock();
 
         $command->handle();
