@@ -10,6 +10,9 @@ use Symfony\Component\Workflow\Dumper\GraphvizDumper;
 use Symfony\Component\Workflow\Workflow as SynfonyWorkflow;
 use Workflow;
 
+/**
+ * @author Boris Koumondji <brexis@yahoo.fr>
+ */
 class WorkflowDumpCommand extends Command
 {
     /**

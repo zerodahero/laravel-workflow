@@ -4,6 +4,9 @@ namespace Brexis\LaravelWorkflow\Traits;
 
 use Workflow;
 
+/**
+ * @author Boris Koumondji <brexis@yahoo.fr>
+ */
 trait WorkflowTrait
 {
     public function workflow_apply($transition, $workflow = null)

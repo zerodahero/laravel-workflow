@@ -4,6 +4,9 @@ namespace Brexis\LaravelWorkflow;
 
 use Illuminate\Support\ServiceProvider;
 
+/**
+ * @author Boris Koumondji <brexis@yahoo.fr>
+ */
 class WorkflowServiceProvider extends ServiceProvider
 {
     protected $commands = [
