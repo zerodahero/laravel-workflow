@@ -133,39 +133,39 @@ You can subscribe to an event
 
 namespace App\Listeners;
 
-use Symfony\Component\Workflow\Event\GuardEvent;
-use Symfony\Component\Workflow\Event\Event;
-
 class BlogPostWorkflowSubscriber
 {
     /**
      * Handle workflow guard events.
      */
     public function onGuard(GuardEvent $event) {
+        /** Symfony\Component\Workflow\Event\GuardEvent */
+        $originalEvent = $event->getOriginalEvent();
+
         /** @var App\BlogPost $post */
-        $post = $event->getSubject();
+        $post = $originalEvent->getSubject();
         $title = $post->title;
 
         if (empty($title)) {
             // Posts with no title should not be allowed
-            $event->setBlocked(true);
+            $originalEvent->setBlocked(true);
         }
     }
 
     /**
      * Handle workflow leave event.
      */
-    public function onLeave(Event $event) {}
+    public function onLeave($event) {}
 
     /**
      * Handle workflow transition event.
      */
-    public function onTransition(Event $event) {}
+    public function onTransition($event) {}
 
     /**
      * Handle workflow enter event.
      */
-    public function onEnter(Event $event) {}
+    public function onEnter($event) {}
 
     /**
      * Register the listeners for the subscriber.

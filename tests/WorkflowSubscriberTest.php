@@ -34,10 +34,10 @@ namespace Tests {
 
             $workflow->apply($object, 't1');
 
-            $this->assertTrue($events[0] instanceof \Brexis\LaravelWorkflow\Events\Guard);
-            $this->assertTrue($events[1] instanceof \Brexis\LaravelWorkflow\Events\Leave);
-            $this->assertTrue($events[2] instanceof \Brexis\LaravelWorkflow\Events\Transition);
-            $this->assertTrue($events[3] instanceof \Brexis\LaravelWorkflow\Events\Enter);
+            $this->assertTrue($events[0] instanceof \Brexis\LaravelWorkflow\Events\GuardEvent);
+            $this->assertTrue($events[1] instanceof \Brexis\LaravelWorkflow\Events\LeaveEvent);
+            $this->assertTrue($events[2] instanceof \Brexis\LaravelWorkflow\Events\TransitionEvent);
+            $this->assertTrue($events[3] instanceof \Brexis\LaravelWorkflow\Events\EnterEvent);
         }
     }
 }

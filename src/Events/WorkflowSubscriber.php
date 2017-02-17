@@ -3,25 +3,25 @@
 namespace Brexis\LaravelWorkflow\Events;
 
 use Symfony\Component\Workflow\Event\Event;
-use Symfony\Component\Workflow\Event\GuardEvent;
+use Symfony\Component\Workflow\Event\GuardEvent as SymfonyGuardEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class WorkflowSubscriber implements EventSubscriberInterface
 {
-    public function guardEvent(GuardEvent $event) {
-        event(new Guard($event));
+    public function guardEvent(SymfonyGuardEvent $event) {
+        event(new GuardEvent($event));
     }
 
     public function leaveEvent(Event $event) {
-        event(new Leave($event));
+        event(new LeaveEvent($event));
     }
 
     public function transitionEvent(Event $event) {
-        event(new Transition($event));
+        event(new TransitionEvent($event));
     }
 
     public function enterEvent(Event $event) {
-        event(new Enter($event));
+        event(new EnterEvent($event));
     }
 
     public static function getSubscribedEvents()
