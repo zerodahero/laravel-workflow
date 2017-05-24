@@ -181,17 +181,17 @@ class BlogPostWorkflowSubscriber
 
         $events->listen(
             'Brexis\LaravelWorkflow\Events\LeaveEvent',
-            'App\Listeners\UserEventSubscriber@onLeave'
+            'App\Listeners\BlogPostWorkflowSubscriber@onLeave'
         );
 
         $events->listen(
             'Brexis\LaravelWorkflow\Events\TransitionEvent',
-            'App\Listeners\UserEventSubscriber@onTransition'
+            'App\Listeners\BlogPostWorkflowSubscriber@onTransition'
         );
 
         $events->listen(
             'Brexis\LaravelWorkflow\Events\EnterEvent',
-            'App\Listeners\UserEventSubscriber@onEnter'
+            'App\Listeners\BlogPostWorkflowSubscriber@onEnter'
         );
     }
 
