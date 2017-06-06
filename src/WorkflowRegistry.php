@@ -13,6 +13,7 @@ use Symfony\Component\Workflow\Registry;
 use Symfony\Component\Workflow\StateMachine;
 use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Workflow;
+use Symfony\Component\Workflow\SupportStrategy\ClassInstanceSupportStrategy;
 
 /**
  * @author Boris Koumondji <brexis@yahoo.fr>
@@ -55,7 +56,7 @@ class WorkflowRegistry
             $workflow       = $this->getWorkflowInstance($name, $workflowData, $definition, $markingStore);
 
             foreach ($workflowData['supports'] as $supportedClass) {
-                $this->registry->add($workflow, $supportedClass);
+                $this->registry->add($workflow, new ClassInstanceSupportStrategy($supportedClass));
             }
         }
     }
