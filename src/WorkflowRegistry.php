@@ -79,7 +79,7 @@ class WorkflowRegistry
      */
     public function add(Workflow $workflow, $supportStrategy)
     {
-        return $this->registry->add($workflow, $supportStrategy);
+        return $this->registry->add($workflow, new ClassInstanceSupportStrategy($supportStrategy));
     }
 
     /**
