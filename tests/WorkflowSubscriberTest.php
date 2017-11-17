@@ -6,11 +6,13 @@ namespace Tests {
     use Tests\Fixtures\TestObject;
     use Illuminate\Support\Facades\Event;
 
-    class WorkflowRegistryTest extends TestCase
+    class WorkflowSubscriberTest extends TestCase
     {
-        public function testIfWorkflowIsRegisrter()
+        public function testIfWorkflowEmitsEvents()
         {
             global $events;
+
+            $events = [];
 
             $config     = [
             'straight'   => [

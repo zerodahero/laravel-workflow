@@ -5,7 +5,7 @@ namespace Tests {
     use Mockery;
     use PHPUnit\Framework\TestCase;
 
-    class WorkflowRegistryTest extends TestCase
+    class WorkflowDumpCommandTest extends TestCase
     {
         public function testWorkflowCommand()
         {
