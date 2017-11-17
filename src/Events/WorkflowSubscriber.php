@@ -12,18 +12,22 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class WorkflowSubscriber implements EventSubscriberInterface
 {
     public function guardEvent(SymfonyGuardEvent $event) {
+        event(new GuardEvent($event));
         event('workflow.'.$event->getWorkflowName().'.guard', $event);
     }
 
     public function leaveEvent(Event $event) {
+        event(new LeaveEvent($event));
         event('workflow.'.$event->getWorkflowName().'.leave', $event);
     }
 
     public function transitionEvent(Event $event) {
+        event(new TransitionEvent($event));
         event('workflow.'.$event->getWorkflowName().'.transition', $event);
     }
 
     public function enterEvent(Event $event) {
+        event(new EnterEvent($event));
         event('workflow.'.$event->getWorkflowName().'.enter', $event);
     }
 
