@@ -24,6 +24,14 @@
     "extra": {
         "branch-alias": {
             "dev-master": "1.0-dev"
+        },
+        "laravel": {
+            "providers": [
+                "Brexis\\LaravelWorkflow\\WorkflowServiceProvider"
+            ],
+            "aliases": {
+                "Workflow": "Brexis\\LaravelWorkflow\\Facades\\WorkflowFacade"
+            }
         }
     },
     "require-dev": {
