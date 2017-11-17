@@ -9,6 +9,10 @@ namespace Tests {
     {
         public function testWorkflowCommand()
         {
+            if (file_exists('straight.png')) {
+                unlink('straight.png');
+            }
+
             $command = Mockery::mock(WorkflowDumpCommand::class)
             ->makePartial()
             ->shouldReceive('argument')
