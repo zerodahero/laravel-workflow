@@ -5,7 +5,7 @@ namespace Tests {
     use Brexis\LaravelWorkflow\WorkflowRegistry;
     use Tests\Fixtures\TestObject;
 
-    class WorkflowRegistryTest extends TestCase
+    class WorkflowSubscriberTest extends TestCase
     {
         public function testIfWorkflowIsRegisrter()
         {

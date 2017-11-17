@@ -56,7 +56,7 @@ class WorkflowRegistry
             $workflow       = $this->getWorkflowInstance($name, $workflowData, $definition, $markingStore);
 
             foreach ($workflowData['supports'] as $supportedClass) {
-                $this->registry->add($workflow, new ClassInstanceSupportStrategy($supportedClass));
+                $this->add($workflow, $supportedClass);
             }
         }
     }
@@ -79,7 +79,7 @@ class WorkflowRegistry
      */
     public function add(Workflow $workflow, $supportStrategy)
     {
-        return $this->registry->add($workflow, $supportStrategy);
+        return $this->registry->add($workflow, new ClassInstanceSupportStrategy($supportStrategy));
     }
 
     /**
