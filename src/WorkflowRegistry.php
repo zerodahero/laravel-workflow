@@ -48,6 +48,10 @@ class WorkflowRegistry
             $builder = new DefinitionBuilder($workflowData['places']);
 
             foreach ($workflowData['transitions'] as $transitionName => $transition) {
+                if (!is_string($transitionName)) {
+                    $transitionName = $transition['name'];
+                }
+
                 $builder->addTransition(new Transition($transitionName, $transition['from'], $transition['to']));
             }
 
