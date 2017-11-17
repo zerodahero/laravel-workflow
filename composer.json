@@ -8,8 +8,8 @@
         "symfony/workflow": "^3.2",
         "symfony/process": "^3.1",
         "symfony/event-dispatcher": "^3.1",
-        "illuminate/console": "^5.3",
-        "illuminate/support": "^5.3"
+        "illuminate/console": "5.3.*",
+        "illuminate/support": "5.3.*"
     },
     "autoload": {
         "psr-4": {
@@ -26,7 +26,6 @@
             "dev-master": "1.0-dev"
         }
     },
-    "minimum-stability": "dev",
     "require-dev": {
         "mockery/mockery": "^0.9.8",
         "phpunit/phpunit": "^6.0"
