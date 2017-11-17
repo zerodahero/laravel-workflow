@@ -28,13 +28,13 @@ Add the `Workflow` facade to your facades array:
     'Workflow' => Brexis\LaravelWorkflow\Facades\WorkflowFacade::class,
 ```
 
+### Configuration
+
 Publish the config file
 
 ```
     php artisan vendor:publish --provider="Brexis\LaravelWorkflow\WorkflowServiceProvider"
 ```
-
-### Configuration
 
 Configure your workflow in `config/workflow.php`
 
