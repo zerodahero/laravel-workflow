@@ -7,9 +7,11 @@ namespace Tests {
 
     class WorkflowSubscriberTest extends TestCase
     {
-        public function testIfWorkflowIsRegisrter()
+        public function testIfWorkflowEmitsEvents()
         {
             global $events;
+
+            $events = [];
 
             $config     = [
             'straight'   => [
