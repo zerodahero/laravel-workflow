@@ -6,7 +6,7 @@ Use the Symfony Workflow component in Laravel
 
     composer require brexis/laravel-workflow
 
-#### Laravel 5
+#### For laravel <= 5.4
 
 Add a ServiceProvider to your providers array in `config/app.php`:
 
