@@ -4,6 +4,7 @@ namespace Tests {
     use PHPUnit\Framework\TestCase;
     use Brexis\LaravelWorkflow\WorkflowRegistry;
     use Tests\Fixtures\TestObject;
+    use Illuminate\Support\Facades\Event;
 
     class WorkflowSubscriberTest extends TestCase
     {
@@ -34,10 +35,10 @@ namespace Tests {
 
             $workflow->apply($object, 't1');
 
-            $this->assertTrue($events[0] instanceof \Brexis\LaravelWorkflow\Events\GuardEvent);
-            $this->assertTrue($events[1] instanceof \Brexis\LaravelWorkflow\Events\LeaveEvent);
-            $this->assertTrue($events[2] instanceof \Brexis\LaravelWorkflow\Events\TransitionEvent);
-            $this->assertTrue($events[3] instanceof \Brexis\LaravelWorkflow\Events\EnterEvent);
+            $this->assertTrue($events[0] == "workflow.straight.guard");
+            $this->assertTrue($events[1] == "workflow.straight.leave");
+            $this->assertTrue($events[2] == "workflow.straight.transition");
+            $this->assertTrue($events[3] == "workflow.straight.enter");
         }
     }
 }
