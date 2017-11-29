@@ -31,13 +31,19 @@ class WorkflowSubscriber implements EventSubscriberInterface
         event('workflow.'.$event->getWorkflowName().'.enter', $event);
     }
 
+    public function enteredEvent(Event $event) {
+        event(new EnteredEvent($event));
+        event('workflow.'.$event->getWorkflowName().'.entered', $event);
+    }
+
     public static function getSubscribedEvents()
     {
         return [
             'workflow.guard'        => ['guardEvent'],
             'workflow.leave'        => ['leaveEvent'],
             'workflow.transition'   => ['transitionEvent'],
-            'workflow.enter'        => ['enterEvent']
+            'workflow.enter'        => ['enterEvent'],
+            'workflow.entered'      => ['enteredEvent'],
         ];
     }
 }
