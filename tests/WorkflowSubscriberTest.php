@@ -44,6 +44,8 @@ namespace Tests {
             $this->assertTrue($events[5] == "workflow.straight.transition");
             $this->assertTrue($events[6] instanceof \Brexis\LaravelWorkflow\Events\EnterEvent);
             $this->assertTrue($events[7] == "workflow.straight.enter");
+            $this->assertTrue($events[8] instanceof \Brexis\LaravelWorkflow\Events\EnteredEvent);
+            $this->assertTrue($events[9] == "workflow.straight.entered");
         }
     }
 }
