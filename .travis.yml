@@ -4,7 +4,7 @@ php:
   - 7.0
   - 7.1
 before_install:
-  - sudo apt-add-repository ppa:dperry/ppa-graphviz-test
+  - sudo apt-add-repository ppa:dperry/ppa-graphviz-test -y
   - sudo apt-get update
   - sudo apt-get autoremove graphviz
   - sudo apt-get install graphviz
