@@ -168,6 +168,11 @@ class BlogPostWorkflowSubscriber
     public function onEnter($event) {}
 
     /**
+     * Handle workflow entered event.
+     */
+    public function onEntered($event) {}
+
+    /**
      * Register the listeners for the subscriber.
      *
      * @param  Illuminate\Events\Dispatcher  $events
@@ -192,6 +197,11 @@ class BlogPostWorkflowSubscriber
         $events->listen(
             'Brexis\LaravelWorkflow\Events\EnterEvent',
             'App\Listeners\BlogPostWorkflowSubscriber@onEnter'
+        );
+
+        $events->listen(
+            'Brexis\LaravelWorkflow\Events\EnteredEvent',
+            'App\Listeners\BlogPostWorkflowSubscriber@onEntered'
         );
     }
 
