@@ -4,8 +4,10 @@ php:
   - 7.0
   - 7.1
 before_install:
-  - wget http://204.178.9.49/pub/graphviz/stable/ubuntu/ub13.10/x86_64/graphviz_2.38.0-1~saucy_amd64.deb
-  - sudo dpkg -i graphviz_2.38.0-1~saucy_amd64.deb
+  - sudo apt-add-repository ppa:dperry/ppa-graphviz-test
+  - sudo apt-get update
+  - sudo apt-get autoremove graphviz
+  - sudo apt-get install graphviz
 
 before_script:
   - composer self-update
