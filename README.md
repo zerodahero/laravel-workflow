@@ -1,4 +1,4 @@
-# Laravel workflow
+# Laravel workflow [![Build Status](https://travis-ci.org/brexis/laravel-workflow.svg?branch=1.1.2)](https://travis-ci.org/brexis/laravel-workflow)
 
 Use the Symfony Workflow component in Laravel
 
