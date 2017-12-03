@@ -117,13 +117,14 @@ $post->save();
 ```
 
 ### Use the events
-This package provides a list of event fired during a transition
+This package provides a list of events fired during a transition
 
 ```php
     Brexis\LaravelWorkflow\Events\Guard
     Brexis\LaravelWorkflow\Events\Leave
     Brexis\LaravelWorkflow\Events\Transition
     Brexis\LaravelWorkflow\Events\Enter
+    Brexis\LaravelWorkflow\Events\Entered
 ```
 
 You can subscribe to an event
