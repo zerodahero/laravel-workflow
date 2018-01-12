@@ -24,7 +24,9 @@ class WorkflowSubscriber implements EventSubscriberInterface
         event(new LeaveEvent($event));
         event('workflow.leave', $event);
         event('workflow.' . $event->getWorkflowName() . '.leave', $event);
-        event('workflow.' . $event->getWorkflowName() . '.leave.' . $event->getTransition()->getName(), $event);
+        foreach ($event->getTransition()->getFroms() as $marking) {
+            event('workflow.' . $event->getWorkflowName() . '.leave.' . $marking, $event);
+        }
     }
 
     public function transitionEvent(Event $event)
@@ -40,7 +42,9 @@ class WorkflowSubscriber implements EventSubscriberInterface
         event(new EnterEvent($event));
         event('workflow.enter', $event);
         event('workflow.' . $event->getWorkflowName() . '.enter', $event);
-        event('workflow.' . $event->getWorkflowName() . '.enter.' . $event->getTransition()->getName(), $event);
+        foreach ($event->getTransition()->getTos() as $marking) {
+            event('workflow.' . $event->getWorkflowName() . '.enter.' . $marking, $event);
+        }
     }
 
     public function enteredEvent(Event $event)
@@ -48,8 +52,19 @@ class WorkflowSubscriber implements EventSubscriberInterface
         event(new EnteredEvent($event));
         event('workflow.entered', $event);
         event('workflow.' . $event->getWorkflowName() . '.entered', $event);
-        event('workflow.' . $event->getWorkflowName() . '.entered.' . $event->getTransition()->getName(), $event);
+        foreach ($event->getTransition()->getTos() as $marking) {
+            event('workflow.' . $event->getWorkflowName() . '.entered.' . $marking, $event);
+        }
     }
+
+    public function completedEvent(Event $event)
+    {
+        event(new CompletedEvent($event));
+        event('workflow.completed', $event);
+        event('workflow.' . $event->getWorkflowName() . '.completed', $event);
+        event('workflow.' . $event->getWorkflowName() . '.completed.' . $event->getTransition()->getName(), $event);
+    }
+
 
     public static function getSubscribedEvents()
     {
@@ -59,6 +74,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
             'workflow.transition' => ['transitionEvent'],
             'workflow.enter'      => ['enterEvent'],
             'workflow.entered'    => ['enteredEvent'],
+            'workflow.completed'  => ['completedEvent'],
         ];
     }
 }
