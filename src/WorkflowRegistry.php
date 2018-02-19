@@ -11,10 +11,9 @@ use Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore;
 use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
 use Symfony\Component\Workflow\Registry;
 use Symfony\Component\Workflow\StateMachine;
-use Symfony\Component\Workflow\SupportStrategy\SupportStrategyInterface;
+use Symfony\Component\Workflow\SupportStrategy\ClassInstanceSupportStrategy;
 use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Workflow;
-use Symfony\Component\Workflow\SupportStrategy\ClassInstanceSupportStrategy;
 
 /**
  * @author Boris Koumondji <brexis@yahoo.fr>
