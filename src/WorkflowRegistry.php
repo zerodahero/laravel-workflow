@@ -52,23 +52,7 @@ class WorkflowRegistry
         $this->dispatcher->addSubscriber($subscriber);
 
         foreach ($this->config as $name => $workflowData) {
-            $builder = new DefinitionBuilder($workflowData['places']);
-
-            foreach ($workflowData['transitions'] as $transitionName => $transition) {
-                if (!is_string($transitionName)) {
-                    $transitionName = $transition['name'];
-                }
-
-                $builder->addTransition(new Transition($transitionName, $transition['from'], $transition['to']));
-            }
-
-            $definition   = $builder->build();
-            $markingStore = $this->getMarkingStoreInstance($workflowData);
-            $workflow     = $this->getWorkflowInstance($name, $workflowData, $definition, $markingStore);
-
-            foreach ($workflowData['supports'] as $supportedClass) {
-                $this->add($workflow, $supportedClass);
-            }
+            $this->addFromArray($name, $workflowData);
         }
     }
 
@@ -93,6 +77,34 @@ class WorkflowRegistry
     public function add(Workflow $workflow, SupportStrategyInterface $supportStrategy)
     {
         $this->registry->add($workflow, new ClassInstanceSupportStrategy($supportStrategy));
+    }
+
+    /**
+     * Add a workflow to the registry from array
+     *
+     * @param  string $name
+     * @param  array  $workflowData
+     * @throws \ReflectionException
+     */
+    public function addFromArray($name, array $workflowData)
+    {
+        $builder = new DefinitionBuilder($workflowData['places']);
+
+        foreach ($workflowData['transitions'] as $transitionName => $transition) {
+            if (!is_string($transitionName)) {
+                $transitionName = $transition['name'];
+            }
+
+            $builder->addTransition(new Transition($transitionName, $transition['from'], $transition['to']));
+        }
+
+        $definition   = $builder->build();
+        $markingStore = $this->getMarkingStoreInstance($workflowData);
+        $workflow     = $this->getWorkflowInstance($name, $workflowData, $definition, $markingStore);
+
+        foreach ($workflowData['supports'] as $supportedClass) {
+            $this->add($workflow, $supportedClass);
+        }
     }
 
     /**
