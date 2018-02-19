@@ -24,17 +24,17 @@ class WorkflowRegistry
     /**
      * @var Registry
      */
-    private $registry;
+    protected $registry;
 
     /**
      * @var array
      */
-    private $config;
+    protected $config;
 
     /**
      * @var EventDispatcher
      */
-    private $dispatcher;
+    protected $dispatcher;
 
     /**
      * WorkflowRegistry constructor
@@ -44,11 +44,11 @@ class WorkflowRegistry
      */
     public function __construct(array $config)
     {
-        $this->registry   = new Registry();
-        $this->config     = $config;
+        $this->registry = new Registry();
+        $this->config = $config;
         $this->dispatcher = new EventDispatcher();
 
-        $subscriber       = new WorkflowSubscriber();
+        $subscriber = new WorkflowSubscriber();
         $this->dispatcher->addSubscriber($subscriber);
 
         foreach ($this->config as $name => $workflowData) {
@@ -71,10 +71,10 @@ class WorkflowRegistry
     /**
      * Add a workflow to the subject
      *
-     * @param Workflow                 $workflow
-     * @param SupportStrategyInterface $supportStrategy
+     * @param Workflow $workflow
+     * @param string   $supportStrategy
      */
-    public function add(Workflow $workflow, SupportStrategyInterface $supportStrategy)
+    public function add(Workflow $workflow, $supportStrategy)
     {
         $this->registry->add($workflow, new ClassInstanceSupportStrategy($supportStrategy));
     }
@@ -98,9 +98,9 @@ class WorkflowRegistry
             $builder->addTransition(new Transition($transitionName, $transition['from'], $transition['to']));
         }
 
-        $definition   = $builder->build();
+        $definition = $builder->build();
         $markingStore = $this->getMarkingStoreInstance($workflowData);
-        $workflow     = $this->getWorkflowInstance($name, $workflowData, $definition, $markingStore);
+        $workflow = $this->getWorkflowInstance($name, $workflowData, $definition, $markingStore);
 
         foreach ($workflowData['supports'] as $supportedClass) {
             $this->add($workflow, $supportedClass);
@@ -116,19 +116,18 @@ class WorkflowRegistry
      * @param  MarkingStoreInterface $markingStore
      * @return Workflow
      */
-    private function getWorkflowInstance(
+    protected function getWorkflowInstance(
         $name,
         array $workflowData,
         Definition $definition,
         MarkingStoreInterface $markingStore
     ) {
-        $type  = isset($workflowData['type']) ? $workflowData['type'] : 'workflow';
-        $className = Workflow::class;
-
-        if ($type === 'state_machine') {
-            $className = StateMachine::class;
-        } elseif (isset($workflowData['class'])) {
+        if (isset($workflowData['class'])) {
             $className = $workflowData['class'];
+        } elseif (isset($workflowData['type']) && $workflowData['type'] === 'state_machine') {
+            $className = StateMachine::class;
+        } else {
+            $className = Workflow::class;
         }
 
         return new $className($definition, $markingStore, $this->dispatcher, $name);
@@ -141,17 +140,17 @@ class WorkflowRegistry
      * @return MarkingStoreInterface
      * @throws \ReflectionException
      */
-    private function getMarkingStoreInstance(array $workflowData)
+    protected function getMarkingStoreInstance(array $workflowData)
     {
         $markingStoreData = isset($workflowData['marking_store']) ? $workflowData['marking_store'] : [];
-        $type             = isset($markingStoreData['type']) ? $markingStoreData['type'] : 'single_state';
-        $className        = SingleStateMarkingStore::class;
-        $arguments        = isset($markingStoreData['arguments']) ? $markingStoreData['arguments'] : [];
+        $arguments = isset($markingStoreData['arguments']) ? $markingStoreData['arguments'] : [];
 
-        if ($type === 'multiple_state') {
-            $className = MultipleStateMarkingStore::class;
-        } elseif (isset($markingStoreData['class'])) {
+        if (isset($markingStoreData['class'])) {
             $className = $markingStoreData['class'];
+        } elseif (isset($markingStoreData['type']) && $markingStoreData['type'] === 'multiple_state') {
+            $className = MultipleStateMarkingStore::class;
+        } else {
+            $className = SingleStateMarkingStore::class;
         }
 
         $class = new \ReflectionClass($className);
