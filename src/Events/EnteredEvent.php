@@ -7,4 +7,5 @@ namespace Brexis\LaravelWorkflow\Events;
  */
 class EnteredEvent extends BaseEvent
 {
+    //
 }
