@@ -125,4 +125,44 @@ class WorkflowRegistryTest extends TestCase
 
         $this->assertTrue($workflow->can($subject, 't1'));
     }
+
+    public function testWhenMultipleFromIsUsed()
+    {
+        $config = [
+            'straight' => [
+                'type'        => 'state_machine',
+                'supports'    => ['Tests\Fixtures\TestObject'],
+                'places'      => ['a', 'b', 'c'],
+                'transitions' => [
+                    [
+                        'name' => 't1',
+                        'from' => 'a',
+                        'to'   => 'b',
+                    ],
+                    [
+                        'name' => 't2',
+                        'from' => [
+                            'a',
+                            'b'
+                        ],
+                        'to'   => 'c',
+                    ],
+                ],
+            ],
+        ];
+
+        $registry = new WorkflowRegistry($config);
+        $subject = new TestObject;
+        $workflow = $registry->get($subject);
+
+        $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
+        $markingStoreProp->setAccessible(true);
+
+        $markingStore = $markingStoreProp->getValue($workflow);
+
+        $this->assertTrue($workflow instanceof StateMachine);
+        $this->assertTrue($markingStore instanceof SingleStateMarkingStore);
+        $this->assertTrue($workflow->can($subject, 't1'));
+        $this->assertTrue($workflow->can($subject, 't2'));
+    }
 }
