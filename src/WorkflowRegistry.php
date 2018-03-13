@@ -94,7 +94,9 @@ class WorkflowRegistry
                 $transitionName = $transition['name'];
             }
 
-            $builder->addTransition(new Transition($transitionName, $transition['from'], $transition['to']));
+            foreach ((array)$transition['from'] as $form) {
+                $builder->addTransition(new Transition($transitionName, $form, $transition['to']));
+            }
         }
 
         $definition = $builder->build();
