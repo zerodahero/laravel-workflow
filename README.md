@@ -134,6 +134,8 @@ You can subscribe to an event
 
 namespace App\Listeners;
 
+use Brexis\LaravelWorkflow\Events\GuardEvent;
+
 class BlogPostWorkflowSubscriber
 {
     /**
