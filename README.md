@@ -90,7 +90,7 @@ class BlogPost extends Model
 <?php
 
 use App\BlogPost;
-use Brexis\LaravelWorkflow\Facades\WorkflowFacade as Workflow;
+use Workflow;
 
 $post = BlogPost::find(1);
 $workflow = Workflow::get($post);
