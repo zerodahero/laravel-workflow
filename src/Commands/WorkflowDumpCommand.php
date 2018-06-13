@@ -50,7 +50,8 @@ class WorkflowDumpCommand extends Command
         }
 
         if (false === array_search($class, $config[$workflowName]['supports'])) {
-            throw new Exception("Workflow $workflowName has no support for class $class");
+            throw new Exception("Workflow $workflowName has no support for class $class.".
+            ' Please specify a valid support class with the --class option.');
         }
 
         $subject    = new $class;
