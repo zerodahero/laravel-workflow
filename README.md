@@ -89,6 +89,9 @@ class BlogPost extends Model
 ```php
 <?php
 
+use App\BlogPost;
+use Workflow;
+
 $post = BlogPost::find(1);
 $workflow = Workflow::get($post);
 // if more than one workflow is defined for the BlogPost class
@@ -133,6 +136,8 @@ You can subscribe to an event
 <?php
 
 namespace App\Listeners;
+
+use Brexis\LaravelWorkflow\Events\GuardEvent;
 
 class BlogPostWorkflowSubscriber
 {
