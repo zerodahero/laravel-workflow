@@ -217,7 +217,7 @@ class BlogPostWorkflowSubscriber
 ### Dump Workflows
 Symfony workflow uses GraphvizDumper to create the workflow image. You may need to install the `dot` command of [Graphviz](http://www.graphviz.org/)
 
-    php artisan workflow:dump workflow_name
+    php artisan workflow:dump workflow_name --class App\\BlogPost
 
 You can change the image format with the `--format` option. By default the format is png.
 
