@@ -32,11 +32,16 @@ class WorkflowServiceProvider extends ServiceProvider
     */
     public function register()
     {
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/workflow.php',
+            'workflow'
+        );
+
         $this->commands($this->commands);
 
         $this->app->singleton(
             'workflow', function ($app) {
-                return new WorkflowRegistry($app['config']['workflow']);
+                return new WorkflowRegistry($app['config']->get('workflow'));
             }
         );
     }
