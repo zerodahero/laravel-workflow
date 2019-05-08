@@ -1,19 +1,19 @@
 <?php
 
-namespace Brexis\LaravelWorkflow;
+namespace ZeroDaHero\LaravelWorkflow;
 
-use Brexis\LaravelWorkflow\Events\WorkflowSubscriber;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Workflow\Definition;
-use Symfony\Component\Workflow\DefinitionBuilder;
-use Symfony\Component\Workflow\MarkingStore\MarkingStoreInterface;
-use Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore;
-use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
 use Symfony\Component\Workflow\Registry;
-use Symfony\Component\Workflow\StateMachine;
-use Symfony\Component\Workflow\SupportStrategy\ClassInstanceSupportStrategy;
-use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Workflow;
+use Symfony\Component\Workflow\Definition;
+use Symfony\Component\Workflow\Transition;
+use Symfony\Component\Workflow\StateMachine;
+use Symfony\Component\Workflow\DefinitionBuilder;
+use Symfony\Component\EventDispatcher\EventDispatcher;
+use ZeroDaHero\LaravelWorkflow\Events\WorkflowSubscriber;
+use Symfony\Component\Workflow\MarkingStore\MarkingStoreInterface;
+use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
+use Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore;
+use Symfony\Component\Workflow\SupportStrategy\ClassInstanceSupportStrategy;
 
 /**
  * @author Boris Koumondji <brexis@yahoo.fr>

@@ -1,6 +1,6 @@
 <?php
 
-namespace Brexis\LaravelWorkflow\Traits;
+namespace ZeroDaHero\LaravelWorkflow\Traits;
 
 use Workflow;
 

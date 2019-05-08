@@ -1,10 +1,12 @@
-# Laravel workflow [![Build Status](https://travis-ci.org/brexis/laravel-workflow.svg?branch=1.1.2)](https://travis-ci.org/brexis/laravel-workflow)
+# Laravel workflow [![Build Status](https://travis-ci.org/brexis/laravel-workflow.svg?branch=1.1.2)](https://travis-ci.org/zerodahero/laravel-workflow)
+
+This is a fork from [brexis/laravel-workflow](https://github.com/brexis/laravel-workflow). My current needs for this package are a bit more bleeding-edge than seem to be maintainable by the other packages. Massive kudos to brexis for the original work and adaptation on this.
 
 Use the Symfony Workflow component in Laravel
 
 ### Installation
 
-    composer require brexis/laravel-workflow
+    composer require zerodahero/laravel-workflow
 
 #### For laravel <= 5.4
 
@@ -15,7 +17,7 @@ Add a ServiceProvider to your providers array in `config/app.php`:
 
 'providers' => [
     ...
-    Brexis\LaravelWorkflow\WorkflowServiceProvider::class,
+    ZeroDaHero\LaravelWorkflow\WorkflowServiceProvider::class,
 
 ]
 ```
@@ -25,7 +27,7 @@ Add the `Workflow` facade to your facades array:
 ```php
 <?php
     ...
-    'Workflow' => Brexis\LaravelWorkflow\Facades\WorkflowFacade::class,
+    'Workflow' => ZeroDaHero\LaravelWorkflow\Facades\WorkflowFacade::class,
 ```
 
 ### Configuration
@@ -33,7 +35,7 @@ Add the `Workflow` facade to your facades array:
 Publish the config file
 
 ```
-    php artisan vendor:publish --provider="Brexis\LaravelWorkflow\WorkflowServiceProvider"
+    php artisan vendor:publish --provider="ZeroDaHero\LaravelWorkflow\WorkflowServiceProvider"
 ```
 
 Configure your workflow in `config/workflow.php`
@@ -76,7 +78,7 @@ Use the `WorkflowTrait` inside supported classes
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Brexis\LaravelWorkflow\Traits\WorkflowTrait;
+use ZeroDaHero\LaravelWorkflow\Traits\WorkflowTrait;
 
 class BlogPost extends Model
 {
@@ -123,11 +125,11 @@ $post->save();
 This package provides a list of events fired during a transition
 
 ```php
-    Brexis\LaravelWorkflow\Events\Guard
-    Brexis\LaravelWorkflow\Events\Leave
-    Brexis\LaravelWorkflow\Events\Transition
-    Brexis\LaravelWorkflow\Events\Enter
-    Brexis\LaravelWorkflow\Events\Entered
+    ZeroDaHero\LaravelWorkflow\Events\Guard
+    ZeroDaHero\LaravelWorkflow\Events\Leave
+    ZeroDaHero\LaravelWorkflow\Events\Transition
+    ZeroDaHero\LaravelWorkflow\Events\Enter
+    ZeroDaHero\LaravelWorkflow\Events\Entered
 ```
 
 You can subscribe to an event
@@ -137,7 +139,7 @@ You can subscribe to an event
 
 namespace App\Listeners;
 
-use Brexis\LaravelWorkflow\Events\GuardEvent;
+use ZeroDaHero\LaravelWorkflow\Events\GuardEvent;
 
 class BlogPostWorkflowSubscriber
 {
@@ -186,27 +188,27 @@ class BlogPostWorkflowSubscriber
     public function subscribe($events)
     {
         $events->listen(
-            'Brexis\LaravelWorkflow\Events\GuardEvent',
+            'ZeroDaHero\LaravelWorkflow\Events\GuardEvent',
             'App\Listeners\BlogPostWorkflowSubscriber@onGuard'
         );
 
         $events->listen(
-            'Brexis\LaravelWorkflow\Events\LeaveEvent',
+            'ZeroDaHero\LaravelWorkflow\Events\LeaveEvent',
             'App\Listeners\BlogPostWorkflowSubscriber@onLeave'
         );
 
         $events->listen(
-            'Brexis\LaravelWorkflow\Events\TransitionEvent',
+            'ZeroDaHero\LaravelWorkflow\Events\TransitionEvent',
             'App\Listeners\BlogPostWorkflowSubscriber@onTransition'
         );
 
         $events->listen(
-            'Brexis\LaravelWorkflow\Events\EnterEvent',
+            'ZeroDaHero\LaravelWorkflow\Events\EnterEvent',
             'App\Listeners\BlogPostWorkflowSubscriber@onEnter'
         );
 
         $events->listen(
-            'Brexis\LaravelWorkflow\Events\EnteredEvent',
+            'ZeroDaHero\LaravelWorkflow\Events\EnteredEvent',
             'App\Listeners\BlogPostWorkflowSubscriber@onEntered'
         );
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Brexis\LaravelWorkflow\Events;
+namespace ZeroDaHero\LaravelWorkflow\Events;
 
 use Symfony\Component\Workflow\Event\Event;
 

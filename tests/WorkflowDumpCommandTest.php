@@ -1,7 +1,7 @@
 <?php
 namespace Tests {
 
-    use Brexis\LaravelWorkflow\Commands\WorkflowDumpCommand;
+    use ZeroDaHero\LaravelWorkflow\Commands\WorkflowDumpCommand;
     use Mockery;
     use PHPUnit\Framework\TestCase;
 
@@ -76,7 +76,7 @@ namespace Tests {
 }
 
 namespace {
-    use Brexis\LaravelWorkflow\WorkflowRegistry;
+    use ZeroDaHero\LaravelWorkflow\WorkflowRegistry;
 
     $config = [
     'straight'   => [

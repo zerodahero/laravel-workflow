@@ -1,6 +1,6 @@
 <?php
 
-namespace Brexis\LaravelWorkflow;
+namespace ZeroDaHero\LaravelWorkflow;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -10,7 +10,7 @@ use Illuminate\Support\ServiceProvider;
 class WorkflowServiceProvider extends ServiceProvider
 {
     protected $commands = [
-        'Brexis\LaravelWorkflow\Commands\WorkflowDumpCommand',
+        'ZeroDaHero\LaravelWorkflow\Commands\WorkflowDumpCommand',
     ];
 
     /**

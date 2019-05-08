@@ -1,14 +1,14 @@
 <?php
 namespace Tests;
 
-use PHPUnit\Framework\TestCase;
-use Brexis\LaravelWorkflow\WorkflowRegistry;
 use ReflectionProperty;
-use Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore;
-use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
+use Tests\Fixtures\TestObject;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Workflow\Workflow;
 use Symfony\Component\Workflow\StateMachine;
-use Tests\Fixtures\TestObject;
+use ZeroDaHero\LaravelWorkflow\WorkflowRegistry;
+use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
+use Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore;
 
 class WorkflowRegistryTest extends TestCase
 {

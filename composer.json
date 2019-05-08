@@ -1,19 +1,19 @@
 {
-    "name": "brexis/laravel-workflow",
+    "name": "zerodahero/laravel-workflow",
     "description": "Integerate Symfony Workflow component into Laravel.",
     "keywords": ["workflow", "symfony", "laravel", "laravel5"],
     "license": "MIT",
     "require": {
         "php": ">=5.5.9",
-        "symfony/workflow": "^3.3 || ^4.0",
-        "symfony/process": "^3.3 || ^4.0",
-        "symfony/event-dispatcher": "^3.3 || ^4.0",
+        "symfony/workflow": "^4.2",
+        "symfony/process": "^4.2",
+        "symfony/event-dispatcher": "^4.2",
         "illuminate/console": "5.3.* || 5.4.* || 5.5.* || 5.6.* || 5.7.* || 5.8.*",
         "illuminate/support": "5.3.* || 5.4.* || 5.5.* || 5.6.* || 5.7.* || 5.8.*"
     },
     "autoload": {
         "psr-4": {
-            "Brexis\\LaravelWorkflow\\": "src/"
+            "ZeroDaHero\\LaravelWorkflow\\": "src/"
         }
     },
     "autoload-dev": {
@@ -27,10 +27,10 @@
         },
         "laravel": {
             "providers": [
-                "Brexis\\LaravelWorkflow\\WorkflowServiceProvider"
+                "ZeroDaHero\\LaravelWorkflow\\WorkflowServiceProvider"
             ],
             "aliases": {
-                "Workflow": "Brexis\\LaravelWorkflow\\Facades\\WorkflowFacade"
+                "Workflow": "ZeroDaHero\\LaravelWorkflow\\Facades\\WorkflowFacade"
             }
         }
     },

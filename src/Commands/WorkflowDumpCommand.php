@@ -1,14 +1,14 @@
 <?php
 
-namespace Brexis\LaravelWorkflow\Commands;
+namespace ZeroDaHero\LaravelWorkflow\Commands;
 
 use Config;
+use Workflow;
 use Exception;
 use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Workflow\Dumper\GraphvizDumper;
-use Symfony\Component\Workflow\Workflow as SynfonyWorkflow;
-use Workflow;
+use Symfony\Component\Workflow\Workflow as SymfonyWorkflow;
 
 /**
  * @author Boris Koumondji <brexis@yahoo.fr>

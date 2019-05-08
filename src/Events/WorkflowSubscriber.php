@@ -1,10 +1,10 @@
 <?php
 
-namespace Brexis\LaravelWorkflow\Events;
+namespace ZeroDaHero\LaravelWorkflow\Events;
 
 use Symfony\Component\Workflow\Event\Event;
-use Symfony\Component\Workflow\Event\GuardEvent as SymfonyGuardEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Workflow\Event\GuardEvent as SymfonyGuardEvent;
 
 /**
  * @author Boris Koumondji <brexis@yahoo.fr>
