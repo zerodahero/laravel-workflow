@@ -13,7 +13,7 @@ use ZeroDaHero\LaravelWorkflow\Events\WorkflowSubscriber;
 use Symfony\Component\Workflow\MarkingStore\MarkingStoreInterface;
 use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
 use Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore;
-use Symfony\Component\Workflow\SupportStrategy\ClassInstanceSupportStrategy;
+use Symfony\Component\Workflow\SupportStrategy\InstanceOfSupportStrategy;
 
 /**
  * @author Boris Koumondji <brexis@yahoo.fr>
@@ -72,10 +72,12 @@ class WorkflowRegistry
      *
      * @param Workflow $workflow
      * @param string   $supportStrategy
+     *
+     * @return void
      */
     public function add(Workflow $workflow, $supportStrategy)
     {
-        $this->registry->add($workflow, new ClassInstanceSupportStrategy($supportStrategy));
+        $this->registry->addWorkflow($workflow, new InstanceOfSupportStrategy($supportStrategy));
     }
 
     /**
@@ -84,6 +86,8 @@ class WorkflowRegistry
      * @param  string $name
      * @param  array  $workflowData
      * @throws \ReflectionException
+     *
+     * @return void
      */
     public function addFromArray($name, array $workflowData)
     {
@@ -111,7 +115,7 @@ class WorkflowRegistry
     /**
      * Return the workflow instance
      *
-     * @param  String                $name
+     * @param  string                $name
      * @param  array                 $workflowData
      * @param  Definition            $definition
      * @param  MarkingStoreInterface $markingStore
