@@ -40,8 +40,8 @@ class WorkflowRegistryTest extends TestCase
 
         $markingStore = $markingStoreProp->getValue($workflow);
 
-        $this->assertTrue($workflow instanceof Workflow);
-        $this->assertTrue($markingStore instanceof SingleStateMarkingStore);
+        $this->assertInstanceof(Workflow::class, $workflow);
+        $this->assertInstanceof(SingleStateMarkingStore::class, $markingStore);
     }
 
     public function testIfStateMachineIsRegistered()
@@ -76,8 +76,8 @@ class WorkflowRegistryTest extends TestCase
 
         $markingStore = $markingStoreProp->getValue($workflow);
 
-        $this->assertTrue($workflow instanceof StateMachine);
-        $this->assertTrue($markingStore instanceof MultipleStateMarkingStore);
+        $this->assertInstanceOf(StateMachine::class, $workflow);
+        $this->assertInstanceOf(MultipleStateMarkingStore::class, $markingStore);
     }
 
 	public function testIfTransitionsWithSameNameCanBothBeUsed()
@@ -116,8 +116,8 @@ class WorkflowRegistryTest extends TestCase
 
         $markingStore = $markingStoreProp->getValue($workflow);
 
-        $this->assertTrue($workflow instanceof StateMachine);
-        $this->assertTrue($markingStore instanceof SingleStateMarkingStore);
+        $this->assertInstanceof(StateMachine::class, $workflow);
+        $this->assertInstanceof(SingleStateMarkingStore::class, $markingStore);
         $this->assertTrue($workflow->can($subject, 't1'));
 
         $workflow->apply($subject, 't1');
@@ -160,8 +160,8 @@ class WorkflowRegistryTest extends TestCase
 
         $markingStore = $markingStoreProp->getValue($workflow);
 
-        $this->assertTrue($workflow instanceof StateMachine);
-        $this->assertTrue($markingStore instanceof SingleStateMarkingStore);
+        $this->assertInstanceof(StateMachine::class, $workflow);
+        $this->assertInstanceof(SingleStateMarkingStore::class, $markingStore);
         $this->assertTrue($workflow->can($subject, 't1'));
         $this->assertTrue($workflow->can($subject, 't2'));
     }

@@ -17,9 +17,6 @@ use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
 use Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore;
 use Symfony\Component\Workflow\SupportStrategy\InstanceOfSupportStrategy;
 
-/**
- * @author Boris Koumondji <brexis@yahoo.fr>
- */
 class WorkflowRegistry
 {
     /**
