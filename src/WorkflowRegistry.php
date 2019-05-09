@@ -14,6 +14,7 @@ use Symfony\Component\Workflow\Metadata\InMemoryMetadataStore;
 use Symfony\Component\Workflow\Exception\InvalidArgumentException;
 use Symfony\Component\Workflow\MarkingStore\MarkingStoreInterface;
 use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
+use ZeroDaHero\LaravelWorkflow\Exceptions\DuplicateWorkflowException;
 use Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore;
 use Symfony\Component\Workflow\SupportStrategy\InstanceOfSupportStrategy;
 
@@ -64,6 +65,18 @@ class WorkflowRegistry
     public function get($subject, $workflowName = null)
     {
         return $this->registry->get($subject, $workflowName);
+    }
+
+    /**
+     * Returns all workflows for the given subject
+     *
+     * @param object $subject
+     *
+     * @return Workflow[]
+     */
+    public function all($subject): array
+    {
+        return $this->registry->all($subject);
     }
 
     /**
