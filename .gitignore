@@ -2,3 +2,4 @@ vendor/
 straight.png
 composer.lock
 .idea
+.phpunit.result.cache

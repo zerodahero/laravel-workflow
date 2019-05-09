@@ -4,7 +4,7 @@
     "keywords": ["workflow", "symfony", "laravel", "laravel5"],
     "license": "MIT",
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=7.2",
         "symfony/workflow": "^4.2",
         "symfony/process": "^4.2",
         "symfony/event-dispatcher": "^4.2",
@@ -35,7 +35,7 @@
         }
     },
     "require-dev": {
-        "mockery/mockery": "^0.9.8",
-        "phpunit/phpunit": "^6.0 || ~7.0"
+        "mockery/mockery": "^1.2",
+        "phpunit/phpunit": "^8.0"
     }
 }

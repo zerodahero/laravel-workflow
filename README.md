@@ -8,7 +8,8 @@ Use the Symfony Workflow component in Laravel
 
     composer require zerodahero/laravel-workflow
 
-#### For laravel <= 5.4
+#### Right now, I've bumped the dependencies up to active PHP version (>=7.2), so in Laravel >= 5.5, use the package auto-discovery
+#### For laravel <= 5.4 (Deprecated)
 
 Add a ServiceProvider to your providers array in `config/app.php`:
 
@@ -56,6 +57,53 @@ return [
             'to_review' => [
                 'from' => 'draft',
                 'to'   => 'review'
+            ],
+            'publish' => [
+                'from' => 'review',
+                'to'   => 'published'
+            ],
+            'reject' => [
+                'from' => 'review',
+                'to'   => 'rejected'
+            ]
+        ],
+    ]
+];
+```
+
+You may also add in metadata, similar to the Symfony implementation (note: it is not collected the same way as Symfony's implementation, but should work the same. Please open a pull request or issue if that's not the case.)
+
+```php
+<?php
+
+return [
+    'straight'   => [
+        'type'          => 'workflow', // or 'state_machine'
+        'metadata'      => [
+            'title' => 'Blog Publishing Workflow',
+        ],
+        'marking_store' => [
+            'type'      => 'multiple_state',
+            'arguments' => ['currentPlace']
+        ],
+        'supports'      => ['App\BlogPost'],
+        'places'        => [
+            'draft', => [
+                'metadata' => [
+                    'max_num_of_words' => 500,
+                ]
+            ]
+            'review',
+            'rejected',
+            'published'
+        ],
+        'transitions'   => [
+            'to_review' => [
+                'from' => 'draft',
+                'to'   => 'review',
+                'metadata' => [
+                    'priority' => 0.5,
+                ]
             ],
             'publish' => [
                 'from' => 'review',
@@ -213,6 +261,86 @@ class BlogPostWorkflowSubscriber
         );
     }
 
+}
+```
+
+You are also welcome to use [Symfony's dot syntax style of event emission](https://symfony.com/doc/current/workflow.html#using-events). Note that the events will receive the Symfony events then, not the ones through this package.
+
+```php
+<?php
+
+namespace App\Listeners;
+
+use ZeroDaHero\LaravelWorkflow\Events\GuardEvent;
+
+class BlogPostWorkflowSubscriber
+{
+    // ...
+
+    /**
+     * Register the listeners for the subscriber.
+     *
+     * @param  Illuminate\Events\Dispatcher  $events
+     */
+    public function subscribe($events)
+    {
+        // can use any of the three formats:
+        // workflow.guard
+        // workflow.[workflow name].guard
+        // workflow.[workflow name].guard.[transition name]
+        $events->listen(
+            'workflow.straight.guard',
+            'App\Listeners\BlogPostWorkflowSubscriber@onGuard'
+        );        
+
+        // workflow.leave
+        // workflow.[workflow name].leave
+        // workflow.[workflow name].leave.[place name]
+        $events->listen(
+            'workflow.straight.leave',
+            'App\Listeners\BlogPostWorkflowSubscriber@onLeave'
+        );
+
+        // workflow.transition
+        // workflow.[workflow name].transition
+        // workflow.[workflow name].transition.[transition name]
+        $events->listen(
+            'workflow.straight.transition',
+            'App\Listeners\BlogPostWorkflowSubscriber@onTransition'
+        );
+
+        // workflow.enter
+        // workflow.[workflow name].enter
+        // workflow.[workflow name].enter.[place name]
+        $events->listen(
+            'workflow.straight.enter',
+            'App\Listeners\BlogPostWorkflowSubscriber@onEnter'
+        );
+
+        // workflow.entered
+        // workflow.[workflow name].entered
+        // workflow.[workflow name].entered.[place name]
+        $events->listen(
+            'workflow.straight.entered',
+            'App\Listeners\BlogPostWorkflowSubscriber@onEntered'
+        );
+
+        // workflow.completed
+        // workflow.[workflow name].completed
+        // workflow.[workflow name].completed.[transition name]
+        $events->listen(
+            'workflow.straight.completed',
+            'App\Listeners\BlogPostWorkflowSubscriber@onCompleted'
+        );
+
+        // workflow.announce
+        // workflow.[workflow name].announce
+        // workflow.[workflow name].announce.[transition name]
+        $events->listen(
+            'workflow.straight.announce',
+            'App\Listeners\BlogPostWorkflowSubscriber@onAnnounce'
+        );
+    }
 }
 ```
 
