@@ -14,50 +14,51 @@ class WorkflowServiceProvider extends ServiceProvider
     ];
 
     /**
-    * Bootstrap the application services...
-    *
-    * @return void
-    */
+     * Bootstrap the application services...
+     *
+     * @return void
+     */
     public function boot()
     {
         $configPath = $this->configPath();
 
         $this->publishes([
-            $configPath => config_path('workflow.php')
+            "${configPath}/workflow.php" => config_path('workflow.php'),
+            "${configPath}/workflow_registry.php" => config_path('workflow_registry.php')
         ], 'config');
     }
 
     /**
-    * Register the application services.
-    *
-    * @return void
-    */
+     * Register the application services.
+     *
+     * @return void
+     */
     public function register()
     {
         $this->mergeConfigFrom(
-            $this->configPath(),
-            'workflow'
+            $this->configPath() . '/workflow_registry.php',
+            'workflow_registry'
         );
 
         $this->commands($this->commands);
 
-        $this->app->singleton(
-            'workflow', function ($app) {
-                return new WorkflowRegistry($app['config']->get('workflow'));
-            }
-        );
+        $this->app->singleton('workflow', function ($app) {
+            $workflowConfigs = $app->make('config')->get('workflow');
+            $registryConfig = $app->make('config')->get('workflow_registry');
+            return new WorkflowRegistry($workflowConfigs, $registryConfig);
+        });
     }
 
     protected function configPath()
     {
-        return __DIR__ . '/../config/workflow.php';
+        return __DIR__ . '/../config';
     }
 
     /**
-    * Get the services provided by the provider.
-    *
-    * @return array
-    */
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
     public function provides()
     {
         return ['workflow'];

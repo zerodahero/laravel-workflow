@@ -16,6 +16,7 @@ use Symfony\Component\Workflow\MarkingStore\MarkingStoreInterface;
 use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
 use ZeroDaHero\LaravelWorkflow\Exceptions\DuplicateWorkflowException;
 use Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore;
+use ZeroDaHero\LaravelWorkflow\Exceptions\RegistryNotTrackedException;
 use Symfony\Component\Workflow\SupportStrategy\InstanceOfSupportStrategy;
 
 class WorkflowRegistry
@@ -31,20 +32,35 @@ class WorkflowRegistry
     protected $config;
 
     /**
+     * @var array
+     */
+    protected $registryConfig;
+
+    /**
      * @var EventDispatcher
      */
     protected $dispatcher;
 
     /**
+     * Keeps track of loaded workflows
+     * (Useful when loading workflows after the config load)
+     *
+     * @var array
+     */
+    protected $loadedWorkflows = [];
+
+    /**
      * WorkflowRegistry constructor
      *
      * @param  array $config
+     * @param  array $registryConfig
      * @throws \ReflectionException
      */
-    public function __construct(array $config)
+    public function __construct(array $config, array $registryConfig = null)
     {
         $this->registry = new Registry();
         $this->config = $config;
+        $this->registryConfig = $registryConfig ?? $this->getDefaultRegistryConfig();
         $this->dispatcher = new EventDispatcher();
 
         $subscriber = new WorkflowSubscriber();
@@ -53,6 +69,19 @@ class WorkflowRegistry
         foreach ($this->config as $name => $workflowData) {
             $this->addFromArray($name, $workflowData);
         }
+    }
+
+    /**
+     * Gets the default registry config
+     *
+     * @return array
+     */
+    protected function getDefaultRegistryConfig()
+    {
+        return [
+            'track_loaded' => false,
+            'ignore_duplicates' => true,
+        ];
     }
 
     /**
@@ -89,7 +118,79 @@ class WorkflowRegistry
      */
     public function add(Workflow $workflow, $supportStrategy)
     {
-        $this->registry->addWorkflow($workflow, new InstanceOfSupportStrategy($supportStrategy));
+        if (!$this->isLoaded($workflow->getName(), $supportStrategy)) {
+            $this->registry->addWorkflow($workflow, new InstanceOfSupportStrategy($supportStrategy));
+            $this->setLoaded($workflow->getName(), $supportStrategy);
+        }
+    }
+
+    /**
+     * Checks if the workflow is already loaded for this supported class
+     *
+     * @param string $workflowName
+     * @param string $supportStrategy
+     *
+     * @throws DuplicateWorkflowException
+     *
+     * @return boolean
+     */
+    protected function isLoaded($workflowName, $supportStrategy)
+    {
+        if (!$this->registryConfig['track_loaded']) {
+            return false;
+        }
+
+        if (isset($this->loadedWorkflows[$supportStrategy]) && in_array($workflowName, $this->loadedWorkflows[$supportStrategy])) {
+            if (!$this->registryConfig['ignore_duplicates']) {
+                throw new DuplicateWorkflowException(sprintf('Duplicate workflow (%s) attempting to be loaded for %s', $workflowName, $supportStrategy)); // phpcs:ignore
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Sets the workflow as loaded
+     *
+     * @param string $workflowName
+     * @param string $supportStrategy
+     *
+     * @return void
+     */
+    protected function setLoaded($workflowName, $supportStrategy)
+    {
+        if (!$this->registryConfig['track_loaded']) {
+            return;
+        }
+
+        if (!isset($this->loadedWorkflows[$supportStrategy])) {
+            $this->loadedWorkflows[$supportStrategy] = [];
+        }
+
+        $this->loadedWorkflows[$supportStrategy][] = $workflowName;
+    }
+
+    /**
+     * Gets the loaded workflows
+     *
+     * @param string $supportStrategy
+     *
+     * @throws RegistryNotTrackedException
+     *
+     * @return array
+     */
+    public function getLoaded($supportStrategy = null)
+    {
+        if (!$this->registryConfig['track_loaded']) {
+            throw new RegistryNotTrackedException('This registry is not being tracked, and thus has not recorded any loaded workflows.');
+        }
+
+        if ($supportStrategy) {
+            return $this->loadedWorkflows[$supportStrategy] ?? [];
+        }
+
+        return $this->loadedWorkflows;
     }
 
     /**

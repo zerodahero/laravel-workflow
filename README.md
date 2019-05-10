@@ -352,3 +352,62 @@ Symfony workflow uses GraphvizDumper to create the workflow image. You may need 
 You can change the image format with the `--format` option. By default the format is png.
 
     php artisan workflow:dump workflow_name --format=jpg
+
+### Use in tracking mode
+
+If you are loading workflow definitions through some dynamic means (perhaps via DB), you'll most likely want to turn on registry tracking. This will enable you to see what has been loaded, to prevent or ignore duplicate workflow definitions.
+
+Set `track_loaded` to `true` in the `workflow_registry.php` config file.
+
+```php
+<?php
+
+return [
+
+    /**
+     * When set to true, the registry will track the workflows that have been loaded.
+     * This is useful when you're loading from a DB, or just loading outside of the
+     * main config files.
+     */
+    'track_loaded' => false,
+
+    /**
+     * Only used when track_loaded = true
+     * 
+     * When set to true, a registering a duplicate workflow will be ignored (will not load the new definition)
+     * When set to false, a duplicate workflow will throw a DuplicateWorkflowException
+     */
+    'ignore_duplicates' => false,
+
+];
+```
+
+You can dynamically load a workflow by using the `addFromArray` method
+
+```php
+<?php
+
+    /**
+     * Load the workflow type definition into the registry
+     */
+    protected function loadWorkflow()
+    {
+        $registry = app()->make('workflow');
+        $workflowName = 'straight';
+        $workflowDefinition = [
+            // Workflow definition here
+            // (same format as config/symfony docs)
+        ];
+
+        $registry->addFromArray($workflowName, $workflowDefinition);
+
+        // or if catching duplicates
+
+        try {
+            $registry->addFromArray($workflowName, $workflowDefinition);
+        } catch (DuplicateWorkflowException $e) {
+            // already loaded 
+        }
+    }
+```
+
