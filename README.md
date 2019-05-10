@@ -382,7 +382,7 @@ return [
 ];
 ```
 
-You can dynamically load a workflow by using the `addFromArray` method
+You can dynamically load a workflow by using the `addFromArray` method on the workflow registry
 
 ```php
 <?php
