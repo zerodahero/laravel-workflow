@@ -231,6 +231,10 @@ class WorkflowRegistry
 
         $builder->setMetadataStore($metadataStore);
 
+        if (isset($workflowData['initial_place'])) {
+            $builder->setInitialPlace($workflowData['initial_place']);
+        }
+
         $definition = $builder->build();
         $markingStore = $this->getMarkingStoreInstance($workflowData);
         $workflow = $this->getWorkflowInstance($name, $workflowData, $definition, $markingStore);

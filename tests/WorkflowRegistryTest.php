@@ -80,8 +80,8 @@ class WorkflowRegistryTest extends TestCase
         $this->assertInstanceOf(MultipleStateMarkingStore::class, $markingStore);
     }
 
-	public function testIfTransitionsWithSameNameCanBothBeUsed()
-	{
+    public function testIfTransitionsWithSameNameCanBothBeUsed()
+    {
         $config = [
             'straight' => [
                 'type'        => 'state_machine',
@@ -164,5 +164,40 @@ class WorkflowRegistryTest extends TestCase
         $this->assertInstanceof(SingleStateMarkingStore::class, $markingStore);
         $this->assertTrue($workflow->can($subject, 't1'));
         $this->assertTrue($workflow->can($subject, 't2'));
+    }
+
+    public function testIfInitialPlaceIsRegistered()
+    {
+        $config     = [
+            'straight'   => [
+                'supports'      => ['Tests\Fixtures\TestObject'],
+                'places'        => ['a', 'b', 'c'],
+                'transitions'   => [
+                    't1' => [
+                        'from' => 'c',
+                        'to'   => 'b',
+                    ],
+                    't2' => [
+                        'from' => 'b',
+                        'to'   => 'a',
+                    ]
+                ],
+                'initial_place' => 'c'
+            ]
+        ];
+
+        $registry   = new WorkflowRegistry($config);
+        $subject    = new TestObject;
+        $workflow   = $registry->get($subject);
+
+        $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
+        $markingStoreProp->setAccessible(true);
+
+        $markingStore = $markingStoreProp->getValue($workflow);
+
+        $this->assertInstanceof(Workflow::class, $workflow);
+        $this->assertInstanceof(SingleStateMarkingStore::class, $markingStore);
+
+        $this->assertEquals('c', $workflow->getDefinition()->getInitialPlace());
     }
 }

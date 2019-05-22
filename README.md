@@ -411,3 +411,48 @@ You can dynamically load a workflow by using the `addFromArray` method on the wo
     }
 ```
 
+You may also specify an `initial_place` in your workflow definition, if it is not the first place in the "places" list.
+
+```php
+<?php
+
+return [
+    'type'          => 'workflow', // or 'state_machine'
+    'metadata'      => [
+        'title' => 'Blog Publishing Workflow',
+    ],
+    'marking_store' => [
+        'type'      => 'multiple_state',
+        'arguments' => ['currentPlace']
+    ],
+    'supports'      => ['App\BlogPost'],
+    'places'        => [
+        'review',
+        'rejected',
+        'published',
+        'draft', => [
+            'metadata' => [
+                'max_num_of_words' => 500,
+            ]
+        ]
+    ],
+    'initial_place' => 'draft',
+    'transitions'   => [
+        'to_review' => [
+            'from' => 'draft',
+            'to'   => 'review',
+            'metadata' => [
+                'priority' => 0.5,
+            ]
+        ],
+        'publish' => [
+            'from' => 'review',
+            'to'   => 'published'
+        ],
+        'reject' => [
+            'from' => 'review',
+            'to'   => 'rejected'
+        ]
+    ],
+];
+```
