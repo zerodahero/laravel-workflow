@@ -44,42 +44,47 @@ namespace Tests {
 
             $workflow->apply($object, 't1');
 
-            $this->assertCount(28, $events);
+            $this->assertCount(31, $events);
 
-            $this->assertInstanceOf(GuardEvent::class, $events[0]);
-            $this->assertEquals('workflow.guard', $events[1]);
-            $this->assertEquals('workflow.straight.guard', $events[2]);
-            $this->assertEquals('workflow.straight.guard.t1', $events[3]);
+            // Symfony Workflow 4.2.9 fires entered event on initialize
+            $this->assertInstanceOf(EnteredEvent::class, $events[0]);
+            $this->assertEquals('workflow.entered', $events[1]);
+            $this->assertEquals('workflow.straight.entered', $events[2]);
 
-            $this->assertInstanceOf(LeaveEvent::class, $events[4]);
-            $this->assertEquals('workflow.leave', $events[5]);
-            $this->assertEquals('workflow.straight.leave', $events[6]);
-            $this->assertEquals('workflow.straight.leave.a', $events[7]);
+            $this->assertInstanceOf(GuardEvent::class, $events[3]);
+            $this->assertEquals('workflow.guard', $events[4]);
+            $this->assertEquals('workflow.straight.guard', $events[5]);
+            $this->assertEquals('workflow.straight.guard.t1', $events[6]);
 
-            $this->assertInstanceOf(TransitionEvent::class, $events[8]);
-            $this->assertEquals('workflow.transition', $events[9]);
-            $this->assertEquals('workflow.straight.transition', $events[10]);
-            $this->assertEquals('workflow.straight.transition.t1', $events[11]);
+            $this->assertInstanceOf(LeaveEvent::class, $events[7]);
+            $this->assertEquals('workflow.leave', $events[8]);
+            $this->assertEquals('workflow.straight.leave', $events[9]);
+            $this->assertEquals('workflow.straight.leave.a', $events[10]);
 
-            $this->assertInstanceOf(EnterEvent::class, $events[12]);
-            $this->assertEquals('workflow.enter', $events[13]);
-            $this->assertEquals('workflow.straight.enter', $events[14]);
-            $this->assertEquals('workflow.straight.enter.b', $events[15]);
+            $this->assertInstanceOf(TransitionEvent::class, $events[11]);
+            $this->assertEquals('workflow.transition', $events[12]);
+            $this->assertEquals('workflow.straight.transition', $events[13]);
+            $this->assertEquals('workflow.straight.transition.t1', $events[14]);
 
-            $this->assertInstanceOf(EnteredEvent::class, $events[16]);
-            $this->assertEquals('workflow.entered', $events[17]);
-            $this->assertEquals('workflow.straight.entered', $events[18]);
-            $this->assertEquals('workflow.straight.entered.b', $events[19]);
+            $this->assertInstanceOf(EnterEvent::class, $events[15]);
+            $this->assertEquals('workflow.enter', $events[16]);
+            $this->assertEquals('workflow.straight.enter', $events[17]);
+            $this->assertEquals('workflow.straight.enter.b', $events[18]);
 
-            $this->assertInstanceOf(CompletedEvent::class, $events[20]);
-            $this->assertEquals('workflow.completed', $events[21]);
-            $this->assertEquals('workflow.straight.completed', $events[22]);
-            $this->assertEquals('workflow.straight.completed.t1', $events[23]);
+            $this->assertInstanceOf(EnteredEvent::class, $events[19]);
+            $this->assertEquals('workflow.entered', $events[20]);
+            $this->assertEquals('workflow.straight.entered', $events[21]);
+            $this->assertEquals('workflow.straight.entered.b', $events[22]);
 
-            $this->assertInstanceOf(GuardEvent::class, $events[24]);
-            $this->assertEquals('workflow.guard', $events[25]);
-            $this->assertEquals('workflow.straight.guard', $events[26]);
-            $this->assertEquals('workflow.straight.guard.t2', $events[27]);
+            $this->assertInstanceOf(CompletedEvent::class, $events[23]);
+            $this->assertEquals('workflow.completed', $events[24]);
+            $this->assertEquals('workflow.straight.completed', $events[25]);
+            $this->assertEquals('workflow.straight.completed.t1', $events[26]);
+
+            $this->assertInstanceOf(GuardEvent::class, $events[27]);
+            $this->assertEquals('workflow.guard', $events[28]);
+            $this->assertEquals('workflow.straight.guard', $events[29]);
+            $this->assertEquals('workflow.straight.guard.t2', $events[30]);
         }
     }
 }

@@ -5,7 +5,7 @@
     "license": "MIT",
     "require": {
         "php": ">=7.2",
-        "symfony/workflow": "^4.2",
+        "symfony/workflow": "^4.2.9",
         "symfony/process": "^4.2",
         "symfony/event-dispatcher": "^4.2",
         "illuminate/console": "5.3.* || 5.4.* || 5.5.* || 5.6.* || 5.7.* || 5.8.*",
