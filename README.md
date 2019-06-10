@@ -71,6 +71,9 @@ return [
 ];
 ```
 
+If you are using a "multiple_state" type of marking_store (i.e. you will be in multiple places simultaneously in your workflow), you will need your supported class/Eloquent model to cast the marking to an array. Read more in the [Laravel docs](https://laravel.com/docs/5.8/eloquent-mutators#array-and-json-casting).
+
+
 You may also add in metadata, similar to the Symfony implementation (note: it is not collected the same way as Symfony's implementation, but should work the same. Please open a pull request or issue if that's not the case.)
 
 ```php
