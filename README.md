@@ -150,6 +150,9 @@ $workflow = Workflow::get($post);
 // if more than one workflow is defined for the BlogPost class
 $workflow = Workflow::get($post, $workflowName);
 
+// I believe this how to get the current places where the model
+$current_place = $workflow->getMarking($post)->getPlaces();
+
 $workflow->can($post, 'publish'); // False
 $workflow->can($post, 'to_review'); // True
 $transitions = $workflow->getEnabledTransitions($post);
@@ -170,6 +173,7 @@ foreach ($post->workflow_transitions() as $transition) {
 // Apply a transition
 $post->workflow_apply('publish');
 $post->save();
+
 ```
 
 ### Use the events
