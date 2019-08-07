@@ -23,4 +23,9 @@ trait WorkflowTrait
     {
         return Workflow::get($this)->getEnabledTransitions($this);
     }
+
+    public function workflow_get($workflow = null)
+    {
+        return Workflow::get($this, $workflow);
+    }
 }

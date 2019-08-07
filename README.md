@@ -149,6 +149,10 @@ $post = BlogPost::find(1);
 $workflow = Workflow::get($post);
 // if more than one workflow is defined for the BlogPost class
 $workflow = Workflow::get($post, $workflowName);
+// or get it directly from the trait
+$workflow = $post->workflow_get();
+// if more than one workflow is defined for the BlogPost class
+$workflow = $post->workflow_get($workflowName);
 
 $workflow->can($post, 'publish'); // False
 $workflow->can($post, 'to_review'); // True
@@ -157,6 +161,8 @@ $transitions = $workflow->getEnabledTransitions($post);
 // Apply a transition
 $workflow->apply($post, 'to_review');
 $post->save(); // Don't forget to persist the state
+
+// Get the workflow directly
 
 // Using the WorkflowTrait
 $post->workflow_can('publish'); // True
@@ -170,6 +176,34 @@ foreach ($post->workflow_transitions() as $transition) {
 // Apply a transition
 $post->workflow_apply('publish');
 $post->save();
+```
+
+### Symfony Workflow Usage
+Once you have the underlying Symfony workflow component, you can do anything you want, just like you would in Symfony. A couple examples are provided below, but be sure to take a look at the [Symfony docs](https://symfony.com/doc/current/workflow.html) to better understand what's going on here. 
+
+```php
+<?php
+
+use App\Blogpost;
+use Workflow;
+
+$post = BlogPost::find(1);
+$workflow = $post->workflow_get();
+
+// Get the current places
+$places = $workflow->getMarking($post)->getPlaces();
+
+// Get the definition
+$definition = $workflow->getDefinition();
+
+// Get the metadata
+$metadata = $workflow->getMetadataStore();
+// or get a specific piece of metadata
+$workflowMetadata = $workflow->getMetadataStore()->getWorkflowMetadata();
+$placeMetadata = $workflow->getMetadataStore()->getPlaceMetadata($place); // string place name
+$transitionMetadata = $workflow->getMetadataStore()->getTransitionMetadata($transition); // transition object
+// or by key
+$otherPlaceMetadata = $workflow->getMetadataStore()->getMetadata('max_num_of_words', 'draft');
 ```
 
 ### Use the events
