@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use ReflectionProperty;
@@ -74,5 +75,4 @@ class WorkflowMetadataTest extends TestCase
             )['m3']
         );
     }
-
 }

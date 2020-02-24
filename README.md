@@ -8,8 +8,9 @@ Use the Symfony Workflow component in Laravel
 
     composer require zerodahero/laravel-workflow
 
-#### Right now, I've bumped the dependencies up to active PHP version (>=7.2), so in Laravel >= 5.5, use the package auto-discovery
-#### For laravel <= 5.4 (Deprecated)
+#### Non-package Discovery
+
+If you aren't using package discovery:
 
 Add a ServiceProvider to your providers array in `config/app.php`:
 
@@ -46,25 +47,25 @@ Configure your workflow in `config/workflow.php`
 
 return [
     'straight'   => [
-        'type'          => 'workflow', // or 'state_machine'
+        'type' => 'workflow', // or 'state_machine'
         'marking_store' => [
-            'type'      => 'multiple_state',
-            'arguments' => ['currentPlace']
+            'type' => 'multiple_state', // or 'single_state'
+            'property' => 'currentPlace' // this is the property on the model
         ],
-        'supports'      => ['App\BlogPost'],
-        'places'        => ['draft', 'review', 'rejected', 'published'],
-        'transitions'   => [
+        'supports' => ['App\BlogPost'],
+        'places' => ['draft', 'review', 'rejected', 'published'],
+        'transitions' => [
             'to_review' => [
                 'from' => 'draft',
-                'to'   => 'review'
+                'to' => 'review'
             ],
             'publish' => [
                 'from' => 'review',
-                'to'   => 'published'
+                'to' => 'published'
             ],
             'reject' => [
                 'from' => 'review',
-                'to'   => 'rejected'
+                'to' => 'rejected'
             ]
         ],
     ]
@@ -80,18 +81,18 @@ You may also add in metadata, similar to the Symfony implementation (note: it is
 <?php
 
 return [
-    'straight'   => [
-        'type'          => 'workflow', // or 'state_machine'
-        'metadata'      => [
+    'straight' => [
+        'type' => 'workflow', // or 'state_machine'
+        'metadata' => [
             'title' => 'Blog Publishing Workflow',
         ],
         'marking_store' => [
-            'type'      => 'multiple_state',
-            'arguments' => ['currentPlace']
+            'type' => 'multiple_state', // or 'single_state'
+            'property' => 'currentPlace' // this is the property on the model
         ],
-        'supports'      => ['App\BlogPost'],
-        'places'        => [
-            'draft', => [
+        'supports' => ['App\BlogPost'],
+        'places' => [
+            'draft' => [
                 'metadata' => [
                     'max_num_of_words' => 500,
                 ]
@@ -100,21 +101,21 @@ return [
             'rejected',
             'published'
         ],
-        'transitions'   => [
+        'transitions' => [
             'to_review' => [
                 'from' => 'draft',
-                'to'   => 'review',
+                'to' => 'review',
                 'metadata' => [
                     'priority' => 0.5,
                 ]
             ],
             'publish' => [
                 'from' => 'review',
-                'to'   => 'published'
+                'to' => 'published'
             ],
             'reject' => [
                 'from' => 'review',
-                'to'   => 'rejected'
+                'to' => 'rejected'
             ]
         ],
     ]
@@ -179,7 +180,7 @@ $post->save();
 ```
 
 ### Symfony Workflow Usage
-Once you have the underlying Symfony workflow component, you can do anything you want, just like you would in Symfony. A couple examples are provided below, but be sure to take a look at the [Symfony docs](https://symfony.com/doc/current/workflow.html) to better understand what's going on here. 
+Once you have the underlying Symfony workflow component, you can do anything you want, just like you would in Symfony. A couple examples are provided below, but be sure to take a look at the [Symfony docs](https://symfony.com/doc/current/workflow.html) to better understand what's going on here.
 
 ```php
 <?php
@@ -328,7 +329,7 @@ class BlogPostWorkflowSubscriber
         $events->listen(
             'workflow.straight.guard',
             'App\Listeners\BlogPostWorkflowSubscriber@onGuard'
-        );        
+        );
 
         // workflow.leave
         // workflow.[workflow name].leave
@@ -410,7 +411,7 @@ return [
 
     /**
      * Only used when track_loaded = true
-     * 
+     *
      * When set to true, a registering a duplicate workflow will be ignored (will not load the new definition)
      * When set to false, a duplicate workflow will throw a DuplicateWorkflowException
      */
@@ -443,7 +444,7 @@ You can dynamically load a workflow by using the `addFromArray` method on the wo
         try {
             $registry->addFromArray($workflowName, $workflowDefinition);
         } catch (DuplicateWorkflowException $e) {
-            // already loaded 
+            // already loaded
         }
     }
 ```

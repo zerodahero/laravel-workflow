@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <ruleset name="custom">
-	<description>PSR2</description>
+	<description>PSR12</description>
 
-	<rule ref="PSR2" />
+	<rule ref="PSR12" />
 
     <file>src/</file>
 
