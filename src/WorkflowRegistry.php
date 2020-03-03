@@ -232,8 +232,8 @@ class WorkflowRegistry
 
         $builder->setMetadataStore($metadataStore);
 
-        if (isset($workflowData['initial_place'])) {
-            $builder->setInitialPlaces($workflowData['initial_place']);
+        if (isset($workflowData['initial_places'])) {
+            $builder->setInitialPlaces($workflowData['initial_places']);
         }
 
         $definition = $builder->build();
@@ -289,18 +289,6 @@ class WorkflowRegistry
             ($type === 'single_state'),
             $property
         );
-
-        // if (isset($markingStoreData['class'])) {
-        //     $className = $markingStoreData['class'];
-        // } elseif (isset($markingStoreData['type']) && $markingStoreData['type'] === 'multiple_state') {
-        //     $className = MultipleStateMarkingStore::class;
-        // } else {
-        //     $className = SingleStateMarkingStore::class;
-        // }
-
-        // $class = new \ReflectionClass($className);
-
-        // return $class->newInstanceArgs($arguments);
     }
 
     /**
@@ -316,7 +304,7 @@ class WorkflowRegistry
         $metadata = [
             'workflow' => [],
             'places' => [],
-            'transitions' => new \SplObjectStorage
+            'transitions' => new \SplObjectStorage()
         ];
 
         if (isset($workflowData['metadata'])) {

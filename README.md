@@ -4,11 +4,19 @@ This is a fork from [brexis/laravel-workflow](https://github.com/brexis/laravel-
 
 Use the Symfony Workflow component in Laravel
 
-### Installation
+## Installation
 
     composer require zerodahero/laravel-workflow
 
-#### Non-package Discovery
+## Upgrade from v2 to v3
+
+The biggest changes from v2 to v3 are the dependencies. To match the Symfony v5 components, the Laravel version is raised to v7. If you're on Laravel v6 or earlier, you should continue to use the v2 releases of this package.
+
+To match the changes in the Symfony v5 workflow component, the "arguments" config option has been changed to "property". This describes the property on the model the workflow ties to (in most circumstances, you can simply change the key name from "arguments" to "property", and set to a string instead of the previous array).
+
+Also, the "initial_place" key has been changed to "initial_places" to align with the Symfony component as well.
+
+### Non-package Discovery
 
 If you aren't using package discovery:
 
@@ -32,7 +40,7 @@ Add the `Workflow` facade to your facades array:
     'Workflow' => ZeroDaHero\LaravelWorkflow\Facades\WorkflowFacade::class,
 ```
 
-### Configuration
+## Configuration
 
 Publish the config file
 
@@ -46,7 +54,7 @@ Configure your workflow in `config/workflow.php`
 <?php
 
 return [
-    'straight'   => [
+    'straight' => [
         'type' => 'workflow', // or 'state_machine'
         'marking_store' => [
             'type' => 'multiple_state', // or 'single_state'
@@ -138,7 +146,7 @@ class BlogPost extends Model
 
 }
 ```
-### Usage
+## Usage
 
 ```php
 <?php
@@ -179,7 +187,7 @@ $post->workflow_apply('publish');
 $post->save();
 ```
 
-### Symfony Workflow Usage
+## Symfony Workflow Usage
 Once you have the underlying Symfony workflow component, you can do anything you want, just like you would in Symfony. A couple examples are provided below, but be sure to take a look at the [Symfony docs](https://symfony.com/doc/current/workflow.html) to better understand what's going on here.
 
 ```php
@@ -382,7 +390,7 @@ class BlogPostWorkflowSubscriber
 }
 ```
 
-### Dump Workflows
+## Dump Workflows
 Symfony workflow uses GraphvizDumper to create the workflow image. You may need to install the `dot` command of [Graphviz](http://www.graphviz.org/)
 
     php artisan workflow:dump workflow_name --class App\\BlogPost
@@ -391,7 +399,7 @@ You can change the image format with the `--format` option. By default the forma
 
     php artisan workflow:dump workflow_name --format=jpg
 
-### Use in tracking mode
+## Use in tracking mode
 
 If you are loading workflow definitions through some dynamic means (perhaps via DB), you'll most likely want to turn on registry tracking. This will enable you to see what has been loaded, to prevent or ignore duplicate workflow definitions.
 
@@ -449,22 +457,22 @@ You can dynamically load a workflow by using the `addFromArray` method on the wo
     }
 ```
 
-You may also specify an `initial_place` in your workflow definition, if it is not the first place in the "places" list.
+You may also specify an `initial_places` in your workflow definition, if it is not the first place in the "places" list.
 
 ```php
 <?php
 
 return [
-    'type'          => 'workflow', // or 'state_machine'
-    'metadata'      => [
+    'type' => 'workflow', // or 'state_machine'
+    'metadata' => [
         'title' => 'Blog Publishing Workflow',
     ],
     'marking_store' => [
-        'type'      => 'multiple_state',
-        'arguments' => ['currentPlace']
+        'type' => 'multiple_state',
+        'property' => 'currentPlace'
     ],
-    'supports'      => ['App\BlogPost'],
-    'places'        => [
+    'supports' => ['App\BlogPost'],
+    'places' => [
         'review',
         'rejected',
         'published',
@@ -474,22 +482,22 @@ return [
             ]
         ]
     ],
-    'initial_place' => 'draft',
-    'transitions'   => [
+    'initial_places' => 'draft', // or set to an array if multiple initial places
+    'transitions' => [
         'to_review' => [
             'from' => 'draft',
-            'to'   => 'review',
+            'to' => 'review',
             'metadata' => [
                 'priority' => 0.5,
             ]
         ],
         'publish' => [
             'from' => 'review',
-            'to'   => 'published'
+            'to' => 'published'
         ],
         'reject' => [
             'from' => 'review',
-            'to'   => 'rejected'
+            'to' => 'rejected'
         ]
     ],
 ];
