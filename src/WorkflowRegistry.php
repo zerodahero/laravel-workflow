@@ -13,11 +13,13 @@ use ZeroDaHero\LaravelWorkflow\Events\WorkflowSubscriber;
 use Symfony\Component\Workflow\Metadata\InMemoryMetadataStore;
 use Symfony\Component\Workflow\Exception\InvalidArgumentException;
 use Symfony\Component\Workflow\MarkingStore\MarkingStoreInterface;
+use Symfony\Component\Workflow\MarkingStore\MethodMarkingStore;
 use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
 use ZeroDaHero\LaravelWorkflow\Exceptions\DuplicateWorkflowException;
 use Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore;
 use ZeroDaHero\LaravelWorkflow\Exceptions\RegistryNotTrackedException;
 use Symfony\Component\Workflow\SupportStrategy\InstanceOfSupportStrategy;
+use ZeroDaHero\LaravelWorkflow\MarkingStores\EloquentMarkingStore;
 
 class WorkflowRegistry
 {
@@ -231,8 +233,8 @@ class WorkflowRegistry
 
         $builder->setMetadataStore($metadataStore);
 
-        if (isset($workflowData['initial_place'])) {
-            $builder->setInitialPlace($workflowData['initial_place']);
+        if (isset($workflowData['initial_places'])) {
+            $builder->setInitialPlaces($workflowData['initial_places']);
         }
 
         $definition = $builder->build();
@@ -279,20 +281,16 @@ class WorkflowRegistry
      */
     protected function getMarkingStoreInstance(array $workflowData)
     {
-        $markingStoreData = isset($workflowData['marking_store']) ? $workflowData['marking_store'] : [];
-        $arguments = isset($markingStoreData['arguments']) ? $markingStoreData['arguments'] : [];
+        $markingStoreData = $workflowData['marking_store'] ?? [];
+        $property = $markingStoreData['property'] ?? 'marking';
 
-        if (isset($markingStoreData['class'])) {
-            $className = $markingStoreData['class'];
-        } elseif (isset($markingStoreData['type']) && $markingStoreData['type'] === 'multiple_state') {
-            $className = MultipleStateMarkingStore::class;
-        } else {
-            $className = SingleStateMarkingStore::class;
-        }
+        $type = $markingStoreData['type'] ?? 'single_state';
+        $markingStoreClass = $markingStoreData['class'] ?? EloquentMarkingStore::class;
 
-        $class = new \ReflectionClass($className);
-
-        return $class->newInstanceArgs($arguments);
+        return new $markingStoreClass(
+            ($type === 'single_state'),
+            $property
+        );
     }
 
     /**
@@ -308,7 +306,7 @@ class WorkflowRegistry
         $metadata = [
             'workflow' => [],
             'places' => [],
-            'transitions' => new \SplObjectStorage
+            'transitions' => new \SplObjectStorage()
         ];
 
         if (isset($workflowData['metadata'])) {

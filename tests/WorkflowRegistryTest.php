@@ -4,36 +4,37 @@ namespace Tests;
 use ReflectionProperty;
 use Tests\Fixtures\TestObject;
 use PHPUnit\Framework\TestCase;
+use Tests\Fixtures\TestCustomObject;
 use Symfony\Component\Workflow\Workflow;
 use Symfony\Component\Workflow\StateMachine;
 use ZeroDaHero\LaravelWorkflow\WorkflowRegistry;
-use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
-use Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore;
+use Symfony\Component\Workflow\MarkingStore\MethodMarkingStore;
+use ZeroDaHero\LaravelWorkflow\MarkingStores\EloquentMarkingStore;
 
 class WorkflowRegistryTest extends TestCase
 {
     public function testIfWorkflowIsRegistered()
     {
-        $config     = [
-            'straight'   => [
-                'supports'      => ['Tests\Fixtures\TestObject'],
-                'places'        => ['a', 'b', 'c'],
-                'transitions'   => [
+        $config = [
+            'straight' => [
+                'supports' => ['Tests\Fixtures\TestObject'],
+                'places' => ['a', 'b', 'c'],
+                'transitions' => [
                     't1' => [
                         'from' => 'a',
-                        'to'   => 'b',
+                        'to' => 'b',
                     ],
                     't2' => [
                         'from' => 'b',
-                        'to'   => 'c',
+                        'to' => 'c',
                     ]
                 ],
             ]
         ];
 
-        $registry   = new WorkflowRegistry($config);
-        $subject    = new TestObject;
-        $workflow   = $registry->get($subject);
+        $registry = new WorkflowRegistry($config);
+        $subject = new TestObject;
+        $workflow = $registry->get($subject);
 
         $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
         $markingStoreProp->setAccessible(true);
@@ -41,35 +42,35 @@ class WorkflowRegistryTest extends TestCase
         $markingStore = $markingStoreProp->getValue($workflow);
 
         $this->assertInstanceof(Workflow::class, $workflow);
-        $this->assertInstanceof(SingleStateMarkingStore::class, $markingStore);
+        $this->assertInstanceof(EloquentMarkingStore::class, $markingStore);
     }
 
     public function testIfStateMachineIsRegistered()
     {
-        $config     = [
-            'straight'   => [
-                'type'          => 'state_machine',
+        $config = [
+            'straight' => [
+                'type' => 'state_machine',
                 'marking_store' => [
                     'type' => 'multiple_state',
                 ],
-                'supports'      => ['Tests\Fixtures\TestObject'],
-                'places'        => ['a', 'b', 'c'],
-                'transitions'   => [
+                'supports' => ['Tests\Fixtures\TestObject'],
+                'places' => ['a', 'b', 'c'],
+                'transitions' => [
                     't1' => [
                         'from' => 'a',
-                        'to'   => 'b',
+                        'to' => 'b',
                     ],
                     't2' => [
                         'from' => 'b',
-                        'to'   => 'c',
+                        'to' => 'c',
                     ]
                 ],
             ]
         ];
 
-        $registry   = new WorkflowRegistry($config);
-        $subject     = new TestObject;
-        $workflow   = $registry->get($subject);
+        $registry = new WorkflowRegistry($config);
+        $subject = new TestObject;
+        $workflow = $registry->get($subject);
 
         $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
         $markingStoreProp->setAccessible(true);
@@ -77,38 +78,75 @@ class WorkflowRegistryTest extends TestCase
         $markingStore = $markingStoreProp->getValue($workflow);
 
         $this->assertInstanceOf(StateMachine::class, $workflow);
-        $this->assertInstanceOf(MultipleStateMarkingStore::class, $markingStore);
+        $this->assertInstanceOf(EloquentMarkingStore::class, $markingStore);
     }
 
-    public function testIfTransitionsWithSameNameCanBothBeUsed()
+    public function testEloquentMarkingStoreIsRegistered()
     {
         $config = [
             'straight' => [
-                'type'        => 'state_machine',
-                'supports'    => ['Tests\Fixtures\TestObject'],
-                'places'      => ['a', 'b', 'c'],
+                'type' => 'state_machine',
+                'marking_store' => [
+                    'type' => 'multiple_state',
+                    'class' => MethodMarkingStore::class,
+                ],
+                'supports' => ['Tests\Fixtures\TestObject'],
+                'places' => ['a', 'b', 'c'],
                 'transitions' => [
-                    [
-                        'name' => 't1',
+                    't1' => [
                         'from' => 'a',
-                        'to'   => 'b',
+                        'to' => 'b',
                     ],
-                    [
-                        'name' => 't1',
-                        'from' => 'c',
-                        'to'   => 'b',
-                    ],
-                    [
-                        'name' => 't2',
+                    't2' => [
                         'from' => 'b',
-                        'to'   => 'c',
+                        'to' => 'c',
                     ]
                 ],
             ]
         ];
 
         $registry = new WorkflowRegistry($config);
-        $subject  = new TestObject;
+        $subject = new TestObject;
+        $workflow = $registry->get($subject);
+
+        $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
+        $markingStoreProp->setAccessible(true);
+
+        $markingStore = $markingStoreProp->getValue($workflow);
+
+        $this->assertInstanceOf(StateMachine::class, $workflow);
+        $this->assertInstanceOf(MethodMarkingStore::class, $markingStore);
+    }
+
+    public function testIfTransitionsWithSameNameCanBothBeUsed()
+    {
+        $config = [
+            'straight' => [
+                'type' => 'state_machine',
+                'supports' => ['Tests\Fixtures\TestObject'],
+                'places' => ['a', 'b', 'c'],
+                'transitions' => [
+                    [
+                        'name' => 't1',
+                        'from' => 'a',
+                        'to' => 'b',
+                    ],
+                    [
+                        'name' => 't1',
+                        'from' => 'c',
+                        'to' => 'b',
+                    ],
+                    [
+                        'name' => 't2',
+                        'from' => 'b',
+                        'to' => 'c',
+                    ]
+                ],
+            ]
+        ];
+
+        $registry = new WorkflowRegistry($config);
+        $subject = new TestObject;
         $workflow = $registry->get($subject);
 
         $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
@@ -117,7 +155,7 @@ class WorkflowRegistryTest extends TestCase
         $markingStore = $markingStoreProp->getValue($workflow);
 
         $this->assertInstanceof(StateMachine::class, $workflow);
-        $this->assertInstanceof(SingleStateMarkingStore::class, $markingStore);
+        $this->assertInstanceof(EloquentMarkingStore::class, $markingStore);
         $this->assertTrue($workflow->can($subject, 't1'));
 
         $workflow->apply($subject, 't1');
@@ -130,14 +168,14 @@ class WorkflowRegistryTest extends TestCase
     {
         $config = [
             'straight' => [
-                'type'        => 'state_machine',
-                'supports'    => ['Tests\Fixtures\TestObject'],
-                'places'      => ['a', 'b', 'c'],
+                'type'=> 'state_machine',
+                'supports' => ['Tests\Fixtures\TestObject'],
+                'places' => ['a', 'b', 'c'],
                 'transitions' => [
                     [
                         'name' => 't1',
                         'from' => 'a',
-                        'to'   => 'b',
+                        'to' => 'b',
                     ],
                     [
                         'name' => 't2',
@@ -145,7 +183,7 @@ class WorkflowRegistryTest extends TestCase
                             'a',
                             'b'
                         ],
-                        'to'   => 'c',
+                        'to' => 'c',
                     ],
                 ],
             ],
@@ -161,34 +199,34 @@ class WorkflowRegistryTest extends TestCase
         $markingStore = $markingStoreProp->getValue($workflow);
 
         $this->assertInstanceof(StateMachine::class, $workflow);
-        $this->assertInstanceof(SingleStateMarkingStore::class, $markingStore);
+        $this->assertInstanceof(EloquentMarkingStore::class, $markingStore);
         $this->assertTrue($workflow->can($subject, 't1'));
         $this->assertTrue($workflow->can($subject, 't2'));
     }
 
     public function testIfInitialPlaceIsRegistered()
     {
-        $config     = [
-            'straight'   => [
-                'supports'      => ['Tests\Fixtures\TestObject'],
-                'places'        => ['a', 'b', 'c'],
-                'transitions'   => [
+        $config = [
+            'straight' => [
+                'supports' => ['Tests\Fixtures\TestObject'],
+                'places' => ['a', 'b', 'c'],
+                'transitions' => [
                     't1' => [
                         'from' => 'c',
-                        'to'   => 'b',
+                        'to' => 'b',
                     ],
                     't2' => [
                         'from' => 'b',
-                        'to'   => 'a',
+                        'to' => 'a',
                     ]
                 ],
-                'initial_place' => 'c'
+                'initial_places' => 'c'
             ]
         ];
 
-        $registry   = new WorkflowRegistry($config);
-        $subject    = new TestObject;
-        $workflow   = $registry->get($subject);
+        $registry = new WorkflowRegistry($config);
+        $subject = new TestObject;
+        $workflow = $registry->get($subject);
 
         $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
         $markingStoreProp->setAccessible(true);
@@ -196,8 +234,50 @@ class WorkflowRegistryTest extends TestCase
         $markingStore = $markingStoreProp->getValue($workflow);
 
         $this->assertInstanceof(Workflow::class, $workflow);
-        $this->assertInstanceof(SingleStateMarkingStore::class, $markingStore);
+        $this->assertInstanceof(EloquentMarkingStore::class, $markingStore);
 
-        $this->assertEquals('c', $workflow->getDefinition()->getInitialPlace());
+        $this->assertEquals(['c'], $workflow->getDefinition()->getInitialPlaces());
+    }
+
+    public function testIfCustomMarkingPropertyIsUsed()
+    {
+        $config = [
+            'straight' => [
+                'supports' => ['Tests\Fixtures\TestCustomObject'],
+                'places' => ['a', 'b', 'c'],
+                'marking_store' => [
+                    'type' => 'single_state',
+                    'property' => 'state'
+                ],
+                'transitions' => [
+                    't1' => [
+                        'from' => 'c',
+                        'to' => 'b',
+                    ],
+                    't2' => [
+                        'from' => 'b',
+                        'to' => 'a',
+                    ]
+                ],
+                'initial_places' => 'c'
+            ]
+        ];
+
+        $registry = new WorkflowRegistry($config);
+        $subject = new TestCustomObject;
+        $workflow = $registry->get($subject);
+
+        $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
+        $markingStoreProp->setAccessible(true);
+
+        $markingStore = $markingStoreProp->getValue($workflow);
+
+        $this->assertInstanceof(Workflow::class, $workflow);
+        $this->assertInstanceof(EloquentMarkingStore::class, $markingStore);
+        $this->assertTrue($workflow->can($subject, 't1'));
+
+        $workflow->apply($subject, 't1');
+
+        $this->assertEquals('b', $subject->getState());
     }
 }
