@@ -58,7 +58,8 @@ return [
         'type' => 'workflow', // or 'state_machine'
         'marking_store' => [
             'type' => 'multiple_state', // or 'single_state'
-            'property' => 'currentPlace' // this is the property on the model
+            'property' => 'currentPlace', // this is the property on the model
+            'class' => MethodMarkingStore::class, // you may omit for default, or set to override marking store class
         ],
         'supports' => ['App\BlogPost'],
         'places' => ['draft', 'review', 'rejected', 'published'],

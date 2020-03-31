@@ -19,6 +19,7 @@ use ZeroDaHero\LaravelWorkflow\Exceptions\DuplicateWorkflowException;
 use Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore;
 use ZeroDaHero\LaravelWorkflow\Exceptions\RegistryNotTrackedException;
 use Symfony\Component\Workflow\SupportStrategy\InstanceOfSupportStrategy;
+use ZeroDaHero\LaravelWorkflow\MarkingStores\EloquentMarkingStore;
 
 class WorkflowRegistry
 {
@@ -284,8 +285,9 @@ class WorkflowRegistry
         $property = $markingStoreData['property'] ?? 'marking';
 
         $type = $markingStoreData['type'] ?? 'single_state';
+        $markingStoreClass = $markingStoreData['class'] ?? EloquentMarkingStore::class;
 
-        return new MethodMarkingStore(
+        return new $markingStoreClass(
             ($type === 'single_state'),
             $property
         );

@@ -38,6 +38,7 @@
     "require-dev": {
         "mockery/mockery": "^1.2",
         "phpunit/phpunit": "^8.0",
-        "symfony/var-dumper": "^5.0"
+        "symfony/var-dumper": "^5.0",
+        "fzaninotto/faker": "^1.9"
     }
 }
