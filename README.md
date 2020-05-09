@@ -241,7 +241,8 @@ class BlogPostWorkflowSubscriber
     /**
      * Handle workflow guard events.
      */
-    public function onGuard(GuardEvent $event) {
+    public function onGuard(GuardEvent $event)
+    {
         /** Symfony\Component\Workflow\Event\GuardEvent */
         $originalEvent = $event->getOriginalEvent();
 
@@ -258,7 +259,13 @@ class BlogPostWorkflowSubscriber
     /**
      * Handle workflow leave event.
      */
-    public function onLeave($event) {}
+    public function onLeave($event)
+    {
+        // The event can also proxy to the original event
+        $subject = $event->getSubject();
+        // is the same as:
+        $subject = $event->getOriginalEvent()->getSubject();
+    }
 
     /**
      * Handle workflow transition event.

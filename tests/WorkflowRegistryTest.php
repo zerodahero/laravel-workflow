@@ -10,9 +10,16 @@ use Symfony\Component\Workflow\StateMachine;
 use ZeroDaHero\LaravelWorkflow\WorkflowRegistry;
 use Symfony\Component\Workflow\MarkingStore\MethodMarkingStore;
 use ZeroDaHero\LaravelWorkflow\MarkingStores\EloquentMarkingStore;
+use Illuminate\Support\Facades\Event;
 
-class WorkflowRegistryTest extends TestCase
+class WorkflowRegistryTest extends BaseWorkflowTestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Event::fake();
+    }
+
     public function testIfWorkflowIsRegistered()
     {
         $config = [
