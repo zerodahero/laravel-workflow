@@ -318,7 +318,9 @@ class BlogPostWorkflowSubscriber
 }
 ```
 
-You are also welcome to use [Symfony's dot syntax style of event emission](https://symfony.com/doc/current/workflow.html#using-events). Note that the events will receive the Symfony events then, not the ones through this package.
+You are also welcome to use [Symfony's dot syntax style of event emission](https://symfony.com/doc/current/workflow.html#using-events).
+
+NOTE: these events receive the Symfony event prior to version 3.1.1, and will receive this package's events starting with version 3.1.1
 
 ```php
 <?php
@@ -464,6 +466,8 @@ You can dynamically load a workflow by using the `addFromArray` method on the wo
         }
     }
 ```
+
+NOTE: There's no persistence for dynamic workflows, this package assumes you're storing those somehow (DB, etc). To use the dynamic workflows, you will need to load the workflow prior to using it. The `loadWorkflow()` method above could be tied into a model `boot()` or similar.
 
 You may also specify an `initial_places` in your workflow definition, if it is not the first place in the "places" list.
 
