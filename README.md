@@ -453,6 +453,9 @@ You can dynamically load a workflow by using the `addFromArray` method on the wo
         $workflowDefinition = [
             // Workflow definition here
             // (same format as config/symfony docs)
+            // This should be the definition only,
+            // not including the key for the name.
+            // See note below on initial_places for an example.
         ];
 
         $registry->addFromArray($workflowName, $workflowDefinition);
