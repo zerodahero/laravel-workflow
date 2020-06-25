@@ -19,9 +19,9 @@ trait WorkflowTrait
         return Workflow::get($this, $workflow)->can($this, $transition);
     }
 
-    public function workflow_transitions()
+    public function workflow_transitions($workflow = null)
     {
-        return Workflow::get($this)->getEnabledTransitions($this);
+        return Workflow::get($this, $workflow)->getEnabledTransitions($this);
     }
 
     public function workflow_get($workflow = null)
