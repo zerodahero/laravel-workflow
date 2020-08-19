@@ -400,6 +400,99 @@ class BlogPostWorkflowSubscriber
 }
 ```
 
+## Workflow vs State Machine
+
+When using a multi-state workflow, it becomes necessary to distinguish between an array of multiple places that can transition to one place, or a situation where a subject in exactly multiple places transitions to one. Since the config is a PHP array, you must "nest" the latter situation into an array, so that it builds a transition using an array of places, rather that looping through single places.
+
+### Example 1. Exactly two places transition to one
+
+In this example, a draft must be in both `content_approved` and `legal_approved` at the same time
+
+```php
+<?php
+
+return [
+    'straight' => [
+        'type' => 'workflow',
+        'metadata' => [
+            'title' => 'Blog Publishing Workflow',
+        ],
+        'marking_store' => [
+            'type' => 'multiple_state',
+            'property' => 'currentPlace'
+        ],
+        'supports' => ['App\BlogPost'],
+        'places' => [
+            'draft',
+            'content_review',
+            'content_approved',
+            'legal_review',
+            'legal_approved',
+            'published'
+        ],
+        'transitions' => [
+            'to_review' => [
+                'from' => 'draft',
+                'to' => ['content_review', 'legal_review'],
+            ],
+            // ... transitions to "approved" states here
+            'publish' => [
+                'from' => [ // note array in array
+                    ['content_review', 'legal_review']
+                ],
+                'to' => 'published'
+            ],
+            // ...
+        ],
+    ]
+];
+```
+
+### Example 2. Either of two places transition to one
+
+In this example, a draft can transition from EITHER `content_approved` OR `legal_approved` to `published`
+
+```php
+<?php
+
+return [
+    'straight' => [
+        'type' => 'workflow',
+        'metadata' => [
+            'title' => 'Blog Publishing Workflow',
+        ],
+        'marking_store' => [
+            'type' => 'multiple_state',
+            'property' => 'currentPlace'
+        ],
+        'supports' => ['App\BlogPost'],
+        'places' => [
+            'draft',
+            'content_review',
+            'content_approved',
+            'legal_review',
+            'legal_approved',
+            'published'
+        ],
+        'transitions' => [
+            'to_review' => [
+                'from' => 'draft',
+                'to' => ['content_review', 'legal_review'],
+            ],
+            // ... transitions to "approved" states here
+            'publish' => [
+                'from' => [
+                    'content_review',
+                    'legal_review'
+                ],
+                'to' => 'published'
+            ],
+            // ...
+        ],
+    ]
+];
+```
+
 ## Dump Workflows
 Symfony workflow uses GraphvizDumper to create the workflow image. You may need to install the `dot` command of [Graphviz](http://www.graphviz.org/)
 
