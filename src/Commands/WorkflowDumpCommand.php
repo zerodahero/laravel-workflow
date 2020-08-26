@@ -25,7 +25,8 @@ class WorkflowDumpCommand extends Command
         {workflow : name of workflow from configuration}
         {--class= : the support class name}
         {--format=png : the image format}
-        {--disk=public : the storage disk name}';
+        {--disk=local : the storage disk name}
+        {--path= : the optional path within selected disk}';
 
     /**
      * The console command description.
@@ -45,9 +46,14 @@ class WorkflowDumpCommand extends Command
         $workflowName = $this->argument('workflow');
         $format = $this->option('format');
         $class = $this->option('class');
-        $disk = $this->option('disk');
         $config = Config::get('workflow');
-        $path = Storage::disk($disk)->getAdapter()->getPathPrefix();
+        $disk = $this->option('disk');
+        $optionalPath = $this->option('path');
+        $path = Storage::disk($disk)->path($optionalPath);
+
+        if($optionalPath && !Storage::disk($disk)->exists($optionalPath)){
+            Storage::disk($disk)->makeDirectory($optionalPath);
+        }
 
         if (!isset($config[$workflowName])) {
             throw new Exception("Workflow $workflowName is not configured.");
