@@ -5,6 +5,7 @@ namespace ZeroDaHero\LaravelWorkflow\Commands;
 use Config;
 use Workflow;
 use Exception;
+use Storage;
 use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Workflow\Dumper\GraphvizDumper;
@@ -23,7 +24,8 @@ class WorkflowDumpCommand extends Command
     protected $signature = 'workflow:dump
         {workflow : name of workflow from configuration}
         {--class= : the support class name}
-        {--format=png : the image format}';
+        {--format=png : the image format}
+        {--disk=public : the storage disk name}';
 
     /**
      * The console command description.
@@ -43,7 +45,9 @@ class WorkflowDumpCommand extends Command
         $workflowName = $this->argument('workflow');
         $format = $this->option('format');
         $class = $this->option('class');
+        $disk = $this->option('disk');
         $config = Config::get('workflow');
+        $path = Storage::disk($disk)->getAdapter()->getPathPrefix();
 
         if (!isset($config[$workflowName])) {
             throw new Exception("Workflow $workflowName is not configured.");
@@ -63,6 +67,7 @@ class WorkflowDumpCommand extends Command
         $dotCommand = ['dot', "-T$format", '-o', "$workflowName.$format"];
 
         $process = new Process($dotCommand);
+        $process->setWorkingDirectory($path);
         $process->setInput($dumper->dump($definition));
         $process->mustRun();
     }
