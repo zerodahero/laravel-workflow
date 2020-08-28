@@ -23,8 +23,8 @@ class WorkflowServiceProvider extends ServiceProvider
         $configPath = $this->configPath();
 
         $this->publishes([
-            "${configPath}/workflow.php" => config_path('workflow.php'),
-            "${configPath}/workflow_registry.php" => config_path('workflow_registry.php')
+            "${configPath}/workflow.php" => $this->publishPath('workflow.php'),
+            "${configPath}/workflow_registry.php" => $this->publishPath('workflow_registry.php')
         ], 'config');
     }
 
@@ -52,6 +52,17 @@ class WorkflowServiceProvider extends ServiceProvider
     protected function configPath()
     {
         return __DIR__ . '/../config';
+    }
+    
+    protected function publishPath($configFile)
+    {
+        if (function_exists('config_path')) {
+            $publishPath = config_path($configFile);
+        } else {
+            $publishPath = base_path('config/' . $configFile);
+        }
+        
+        return $publishPath;
     }
 
     /**
