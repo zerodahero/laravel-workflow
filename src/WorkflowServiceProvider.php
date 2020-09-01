@@ -57,12 +57,10 @@ class WorkflowServiceProvider extends ServiceProvider
     protected function publishPath($configFile)
     {
         if (function_exists('config_path')) {
-            $publishPath = config_path($configFile);
+            return config_path($configFile);
         } else {
-            $publishPath = base_path('config/' . $configFile);
+            return base_path('config/' . $configFile);
         }
-        
-        return $publishPath;
     }
 
     /**
