@@ -8,6 +8,14 @@ Use the Symfony Workflow component in Laravel
 
     composer require zerodahero/laravel-workflow
 
+## Laravel Support
+
+| Package Version | Laravel Version Support |
+| --- | --- |
+| ^2.0 | 5.x |
+| ^3.0 | 7.x |
+| ^3.2 | 8.x |
+
 ## Upgrade from v2 to v3
 
 The biggest changes from v2 to v3 are the dependencies. To match the Symfony v5 components, the Laravel version is raised to v7. If you're on Laravel v6 or earlier, you should continue to use the v2 releases of this package.
