@@ -510,6 +510,10 @@ You can change the image format with the `--format` option. By default the forma
 
     php artisan workflow:dump workflow_name --format=jpg
 
+If you would like to output to a different directory than root, you can use the `--disk` and `--path` options to set the Storage disk (`local` by default) and path (`root_path()` by default).
+
+    php artisan workflow:dump workflow-name --class=App\\BlogPost --disk=s3 --path="workflows/diagrams/"
+
 ## Use in tracking mode
 
 If you are loading workflow definitions through some dynamic means (perhaps via DB), you'll most likely want to turn on registry tracking. This will enable you to see what has been loaded, to prevent or ignore duplicate workflow definitions.
