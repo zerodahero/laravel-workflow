@@ -210,7 +210,7 @@ class WorkflowRegistry
 
         foreach ($workflowData['transitions'] as $transitionName => $transition) {
             if (!is_string($transitionName)) {
-                $transitionName = $transition['name'];
+                $transitionName = $transitionName;
             }
 
             foreach ((array)$transition['from'] as $form) {
