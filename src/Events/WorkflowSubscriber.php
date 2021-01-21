@@ -87,7 +87,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
 
     public function completedEvent(Event $event)
     {
-        $workflowName   = $event->getWorkflowName();
+        $workflowName = $event->getWorkflowName();
         $transitionName = $event->getTransition()->getName();
 
         $workflowEvent = new CompletedEvent($event);
@@ -98,15 +98,29 @@ class WorkflowSubscriber implements EventSubscriberInterface
         event(sprintf('workflow.%s.completed.%s', $workflowName, $transitionName), $workflowEvent);
     }
 
+    public function announceEvent(Event $event)
+    {
+        $workflowName = $event->getWorkflowName();
+        $transitionName = $event->getTransition()->getName();
+
+        $workflowEvent = new AnnounceEvent($event);
+
+        event($workflowEvent);
+        event('workflow.announce', $workflowEvent);
+        event(sprintf('workflow.%s.announce', $workflowName), $workflowEvent);
+        event(sprintf('workflow.%s.announce.%s', $workflowName, $transitionName), $workflowEvent);
+    }
+
     public static function getSubscribedEvents()
     {
         return [
-            'workflow.guard'      => ['guardEvent'],
-            'workflow.leave'      => ['leaveEvent'],
+            'workflow.guard' => ['guardEvent'],
+            'workflow.leave' => ['leaveEvent'],
             'workflow.transition' => ['transitionEvent'],
-            'workflow.enter'      => ['enterEvent'],
-            'workflow.entered'    => ['enteredEvent'],
-            'workflow.completed'  => ['completedEvent'],
+            'workflow.enter' => ['enterEvent'],
+            'workflow.entered' => ['enteredEvent'],
+            'workflow.completed' => ['completedEvent'],
+            'workflow.announce' => ['announceEvent'],
         ];
     }
 }

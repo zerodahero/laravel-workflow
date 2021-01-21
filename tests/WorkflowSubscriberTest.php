@@ -2,16 +2,16 @@
 
 namespace Tests;
 
+use Tests\Fixtures\TestObject;
 use Illuminate\Support\Facades\Event;
-use ZeroDaHero\LaravelWorkflow\Events\AnnounceEvent;
-use ZeroDaHero\LaravelWorkflow\Events\CompletedEvent;
-use ZeroDaHero\LaravelWorkflow\Events\EnteredEvent;
+use ZeroDaHero\LaravelWorkflow\WorkflowRegistry;
 use ZeroDaHero\LaravelWorkflow\Events\EnterEvent;
 use ZeroDaHero\LaravelWorkflow\Events\GuardEvent;
 use ZeroDaHero\LaravelWorkflow\Events\LeaveEvent;
+use ZeroDaHero\LaravelWorkflow\Events\EnteredEvent;
+use ZeroDaHero\LaravelWorkflow\Events\AnnounceEvent;
+use ZeroDaHero\LaravelWorkflow\Events\CompletedEvent;
 use ZeroDaHero\LaravelWorkflow\Events\TransitionEvent;
-use ZeroDaHero\LaravelWorkflow\WorkflowRegistry;
-use Tests\Fixtures\TestObject;
 
 class WorkflowSubscriberTest extends BaseWorkflowTestCase
 {
@@ -21,16 +21,16 @@ class WorkflowSubscriberTest extends BaseWorkflowTestCase
 
         $config = [
             'straight' => [
-                'supports'    => [TestObject::class],
-                'places'      => ['a', 'b', 'c'],
+                'supports' => [TestObject::class],
+                'places' => ['a', 'b', 'c'],
                 'transitions' => [
                     't1' => [
                         'from' => 'a',
-                        'to'   => 'b',
+                        'to' => 'b',
                     ],
                     't2' => [
                         'from' => 'b',
-                        'to'   => 'c',
+                        'to' => 'c',
                     ],
                 ],
             ],
@@ -76,6 +76,12 @@ class WorkflowSubscriberTest extends BaseWorkflowTestCase
         Event::assertDispatched('workflow.completed');
         Event::assertDispatched('workflow.straight.completed');
         Event::assertDispatched('workflow.straight.completed.t1');
+
+        // Announce happens after completed
+        Event::assertDispatched(AnnounceEvent::class);
+        Event::assertDispatched('workflow.announce');
+        Event::assertDispatched('workflow.straight.announce');
+        Event::assertDispatched('workflow.straight.announce.t1');
 
         Event::assertDispatched(GuardEvent::class);
         Event::assertDispatched('workflow.guard');
