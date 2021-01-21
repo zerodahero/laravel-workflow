@@ -98,6 +98,19 @@ class WorkflowSubscriber implements EventSubscriberInterface
         event(sprintf('workflow.%s.completed.%s', $workflowName, $transitionName), $workflowEvent);
     }
 
+    public function announceEvent(Event $event)
+    {
+        $workflowName   = $event->getWorkflowName();
+        $transitionName = $event->getTransition()->getName();
+
+        $workflowEvent = new AnnounceEvent($event);
+
+        event($workflowEvent);
+        event('workflow.announce', $workflowEvent);
+        event(sprintf('workflow.%s.announce', $workflowName), $workflowEvent);
+        event(sprintf('workflow.%s.announce.%s', $workflowName, $transitionName), $workflowEvent);
+    }
+
     public static function getSubscribedEvents()
     {
         return [
@@ -107,6 +120,7 @@ class WorkflowSubscriber implements EventSubscriberInterface
             'workflow.enter'      => ['enterEvent'],
             'workflow.entered'    => ['enteredEvent'],
             'workflow.completed'  => ['completedEvent'],
+            'workflow.announce'   => ['announceEvent'],
         ];
     }
 }
