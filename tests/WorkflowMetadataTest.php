@@ -2,14 +2,9 @@
 
 namespace Tests;
 
-use ReflectionProperty;
-use Tests\Fixtures\TestObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Workflow\Workflow;
-use Symfony\Component\Workflow\StateMachine;
+use Tests\Fixtures\TestObject;
 use ZeroDaHero\LaravelWorkflow\WorkflowRegistry;
-use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
-use Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore;
 
 class WorkflowMetadataTest extends TestCase
 {
@@ -18,41 +13,41 @@ class WorkflowMetadataTest extends TestCase
         $config = [
             'straight' => [
                 'metadata' => [
-                    'title' => 'test title'
+                    'title' => 'test title',
                 ],
                 'supports' => ['Tests\Fixtures\TestObject'],
                 'places' => [
                     'a',
                     'b' => [
                         'metadata' => [
-                            'm1' => 'forks'
-                        ]
+                            'm1' => 'forks',
+                        ],
                     ],
                     'c' => [
                         'metadata' => [
-                            'm2' => 'spoons'
-                        ]
-                    ]
+                            'm2' => 'spoons',
+                        ],
+                    ],
                 ],
                 'transitions' => [
                     't1' => [
                         'from' => 'a',
                         'to' => 'b',
                         'metadata' => [
-                            'm3' => 'knives'
-                        ]
+                            'm3' => 'knives',
+                        ],
                     ],
                     't2' => [
                         'from' => 'b',
                         'to' => 'c',
-                    ]
+                    ],
                 ],
-            ]
+            ],
         ];
 
-        $registry   = new WorkflowRegistry($config);
-        $subject    = new TestObject;
-        $workflow   = $registry->get($subject);
+        $registry = new WorkflowRegistry($config);
+        $subject = new TestObject;
+        $workflow = $registry->get($subject);
 
         $this->assertEquals(
             $config['straight']['metadata']['title'],

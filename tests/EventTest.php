@@ -2,9 +2,9 @@
 
 namespace Tests;
 
-use Workflow;
-use Tests\Fixtures\TestModel;
 use Orchestra\Testbench\TestCase;
+use Tests\Fixtures\TestModel;
+use Workflow;
 use ZeroDaHero\LaravelWorkflow\Events\TransitionEvent;
 use ZeroDaHero\LaravelWorkflow\Facades\WorkflowFacade;
 use ZeroDaHero\LaravelWorkflow\WorkflowServiceProvider;
@@ -14,48 +14,6 @@ use ZeroDaHero\LaravelWorkflow\WorkflowServiceProvider;
  */
 class EventTest extends TestCase
 {
-    protected function getPackageProviders($app)
-    {
-        return [WorkflowServiceProvider::class];
-    }
-
-    protected function getPackageAliases($app)
-    {
-        return [
-            'Workflow' => WorkflowFacade::class,
-        ];
-    }
-
-    /**
-     * Define environment setup.
-     *
-     * @param  \Illuminate\Foundation\Application  $app
-     * @return void
-     */
-    protected function getEnvironmentSetUp($app)
-    {
-        $app['config']['workflow'] = [
-            'straight' => [
-                'type' => 'workflow',
-                'marking_store' => [
-                    'type' => 'single_state',
-                ],
-                'supports' => ['Tests\Fixtures\TestModel'],
-                'places' => ['here', 'there', 'somewhere'],
-                'transitions' => [
-                    'to_there' => [
-                        'from' => 'here',
-                        'to' => 'there',
-                    ],
-                    'to_somewhere' => [
-                        'from' => 'there',
-                        'to' => 'somewhere',
-                    ]
-                ],
-            ]
-        ];
-    }
-
     /**
      * @test
      */
@@ -104,5 +62,48 @@ class EventTest extends TestCase
         // $this->assertEquals(??, $event->getMetadata(string $key, $subject));
 
         $this->assertNull($event->doSomethingUndefined());
+    }
+
+    protected function getPackageProviders($app)
+    {
+        return [WorkflowServiceProvider::class];
+    }
+
+    protected function getPackageAliases($app)
+    {
+        return [
+            'Workflow' => WorkflowFacade::class,
+        ];
+    }
+
+    /**
+     * Define environment setup.
+     *
+     * @param  \Illuminate\Foundation\Application  $app
+     *
+     * @return void
+     */
+    protected function getEnvironmentSetUp($app)
+    {
+        $app['config']['workflow'] = [
+            'straight' => [
+                'type' => 'workflow',
+                'marking_store' => [
+                    'type' => 'single_state',
+                ],
+                'supports' => ['Tests\Fixtures\TestModel'],
+                'places' => ['here', 'there', 'somewhere'],
+                'transitions' => [
+                    'to_there' => [
+                        'from' => 'here',
+                        'to' => 'there',
+                    ],
+                    'to_somewhere' => [
+                        'from' => 'there',
+                        'to' => 'somewhere',
+                    ],
+                ],
+            ],
+        ];
     }
 }

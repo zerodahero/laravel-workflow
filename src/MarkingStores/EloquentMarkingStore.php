@@ -3,7 +3,6 @@
 namespace ZeroDaHero\LaravelWorkflow\MarkingStores;
 
 use Symfony\Component\Workflow\Marking;
-use Symfony\Component\Workflow\Exception\LogicException;
 use Symfony\Component\Workflow\MarkingStore\MarkingStoreInterface;
 
 /*
@@ -14,6 +13,7 @@ use Symfony\Component\Workflow\MarkingStore\MarkingStoreInterface;
 class EloquentMarkingStore implements MarkingStoreInterface
 {
     private $singleState;
+
     private $property;
 
     /**
@@ -33,7 +33,7 @@ class EloquentMarkingStore implements MarkingStoreInterface
     {
         $marking = $subject->{$this->property};
 
-        if (!$marking) {
+        if (! $marking) {
             return new Marking();
         }
 
@@ -60,6 +60,7 @@ class EloquentMarkingStore implements MarkingStoreInterface
 
         if (method_exists($subject, $method)) {
             $subject->{$method}($marking, $context);
+
             return;
         }
 

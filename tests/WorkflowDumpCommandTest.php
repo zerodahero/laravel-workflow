@@ -2,32 +2,12 @@
 
 namespace Tests;
 
-use ZeroDaHero\LaravelWorkflow\Commands\WorkflowDumpCommand;
-use Mockery;
 use Illuminate\Support\Facades\Storage;
+use Mockery;
+use ZeroDaHero\LaravelWorkflow\Commands\WorkflowDumpCommand;
 
 class WorkflowDumpCommandTest extends BaseWorkflowTestCase
 {
-    protected function getEnvironmentSetUp($app)
-    {
-        $app['config']['workflow'] = [
-            'straight' => [
-                'supports' => ['Tests\Fixtures\TestObject'],
-                'places' => ['a', 'b', 'c'],
-                'transitions' => [
-                    't1' => [
-                        'from' => 'a',
-                        'to' => 'b',
-                    ],
-                    't2' => [
-                        'from' => 'b',
-                        'to' => 'c',
-                    ]
-                ],
-            ]
-        ];
-    }
-
     public function testShouldThrowExceptionForUndefinedWorkflow()
     {
         $command = Mockery::mock(WorkflowDumpCommand::class)
@@ -84,14 +64,13 @@ class WorkflowDumpCommandTest extends BaseWorkflowTestCase
 
     public function testWorkflowCommand()
     {
-
         $optionalPath = '/my/path';
         $disk = 'public';
 
         Storage::fake($disk);
 
-        if (Storage::disk($disk)->exists($optionalPath.'/straight.png')) {
-            Storage::disk($disk)->delete($optionalPath.'/straight.png');
+        if (Storage::disk($disk)->exists($optionalPath . '/straight.png')) {
+            Storage::disk($disk)->delete($optionalPath . '/straight.png');
         }
 
         $command = Mockery::mock(WorkflowDumpCommand::class)
@@ -115,6 +94,26 @@ class WorkflowDumpCommandTest extends BaseWorkflowTestCase
 
         $command->handle();
 
-        Storage::disk($disk)->assertExists($optionalPath.'/straight.png');
+        Storage::disk($disk)->assertExists($optionalPath . '/straight.png');
+    }
+
+    protected function getEnvironmentSetUp($app)
+    {
+        $app['config']['workflow'] = [
+            'straight' => [
+                'supports' => ['Tests\Fixtures\TestObject'],
+                'places' => ['a', 'b', 'c'],
+                'transitions' => [
+                    't1' => [
+                        'from' => 'a',
+                        'to' => 'b',
+                    ],
+                    't2' => [
+                        'from' => 'b',
+                        'to' => 'c',
+                    ],
+                ],
+            ],
+        ];
     }
 }

@@ -3,13 +3,12 @@
 namespace ZeroDaHero\LaravelWorkflow\Commands;
 
 use Config;
-use Workflow;
 use Exception;
-use Storage;
 use Illuminate\Console\Command;
+use Storage;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Workflow\Dumper\GraphvizDumper;
-use Symfony\Component\Workflow\Workflow as SymfonyWorkflow;
+use Workflow;
 
 /**
  * @author Boris Koumondji <brexis@yahoo.fr>
@@ -51,16 +50,16 @@ class WorkflowDumpCommand extends Command
         $optionalPath = $this->option('path');
         $path = Storage::disk($disk)->path($optionalPath);
 
-        if($optionalPath && !Storage::disk($disk)->exists($optionalPath)){
+        if ($optionalPath && ! Storage::disk($disk)->exists($optionalPath)) {
             Storage::disk($disk)->makeDirectory($optionalPath);
         }
 
-        if (!isset($config[$workflowName])) {
-            throw new Exception("Workflow $workflowName is not configured.");
+        if (! isset($config[$workflowName])) {
+            throw new Exception("Workflow ${workflowName} is not configured.");
         }
 
         if (false === array_search($class, $config[$workflowName]['supports'])) {
-            throw new Exception("Workflow $workflowName has no support for class $class." .
+            throw new Exception("Workflow ${workflowName} has no support for class ${class}." .
                 ' Please specify a valid support class with the --class option.');
         }
 
@@ -70,7 +69,7 @@ class WorkflowDumpCommand extends Command
 
         $dumper = new GraphvizDumper();
 
-        $dotCommand = ['dot', "-T$format", '-o', "$workflowName.$format"];
+        $dotCommand = ['dot', "-T${format}", '-o', "${workflowName}.${format}"];
 
         $process = new Process($dotCommand);
         $process->setWorkingDirectory($path);

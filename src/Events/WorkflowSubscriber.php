@@ -2,8 +2,8 @@
 
 namespace ZeroDaHero\LaravelWorkflow\Events;
 
-use Symfony\Component\Workflow\Event\Event;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Workflow\Event\Event;
 use Symfony\Component\Workflow\Event\GuardEvent as SymfonyGuardEvent;
 
 /**

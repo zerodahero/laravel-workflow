@@ -20,6 +20,8 @@ class EloquentMarkingStoreTest extends TestCase
     /**
      * @test
      * @dataProvider subjectDataProvider
+     *
+     * @param mixed $subject
      */
     public function testSingleStateMarking($subject)
     {
@@ -42,13 +44,15 @@ class EloquentMarkingStoreTest extends TestCase
     {
         return [
             [new TestModel()],
-            [new TestModelMutator()]
+            [new TestModelMutator()],
         ];
     }
 
     /**
      * @test
      * @dataProvider subjectDataProvider
+     *
+     * @param mixed $subject
      */
     public function testMultiStateMarking($subject)
     {

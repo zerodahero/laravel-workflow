@@ -52,8 +52,8 @@ Add the `Workflow` facade to your facades array:
 
 Publish the config file
 
-```
-    php artisan vendor:publish --provider="ZeroDaHero\LaravelWorkflow\WorkflowServiceProvider"
+```bash
+php artisan vendor:publish --provider="ZeroDaHero\LaravelWorkflow\WorkflowServiceProvider"
 ```
 
 Configure your workflow in `config/workflow.php`
@@ -61,15 +61,71 @@ Configure your workflow in `config/workflow.php`
 ```php
 <?php
 
+// Full workflow, annotated.
 return [
+    // Name of the workflow is the key
     'straight' => [
-        'type' => 'workflow', // or 'state_machine'
+        'type' => 'workflow', // or 'state_machine', defaults to 'workflow' if omitted
+        // The marking store can be omitted, and will default to 'multiple_state'
+        // for workflow and 'single_state' for state_machine if the type is omitted
         'marking_store' => [
-            'type' => 'multiple_state', // or 'single_state'
-            'property' => 'currentPlace', // this is the property on the model
-            'class' => MethodMarkingStore::class, // you may omit for default, or set to override marking store class
+            'type' => 'multiple_state', // or 'single_state', can be omitted to default to workflow type's default
+            'property' => 'marking', // this is the property on the model, defaults to 'marking'
+            'class' => MethodMarkingStore::class, // optional, uses EloquentMethodMarkingStore by default (for Eloquent models)
         ],
-        'supports' => ['App\BlogPost'],
+        // optional top-level metadata
+        'metadata' => [
+            // any data
+        ],
+        'supports' => ['App\BlogPost'], // objects this workflow supports
+        // Specifies events to dispatch (only in 'workflow', not 'state_machine')
+        // - set `null` to dispatch all events (default, if omitted)
+        // - set to empty array (`[]`) to dispatch no events
+        // - set to array of events to dispatch only specific events
+        // Note that announce will dispatch a guard event on the next transition
+        // (if announce isn't dispatched the next transition won't guard until checked/applied)
+        'events_to_dispatch' => [
+           Symfony\Component\Workflow\WorkflowEvents::ENTER,
+           Symfony\Component\Workflow\WorkflowEvents::LEAVE,
+           Symfony\Component\Workflow\WorkflowEvents::TRANSITION,
+           Symfony\Component\Workflow\WorkflowEvents::ENTERED,
+           Symfony\Component\Workflow\WorkflowEvents::COMPLETED,
+           Symfony\Component\Workflow\WorkflowEvents::ANNOUNCE,
+        ],
+        'places' => ['draft', 'review', 'rejected', 'published'],
+        'initial_places' => ['draft'], // defaults to the first place if omitted
+        'transitions' => [
+            'to_review' => [
+                'from' => 'draft',
+                'to' => 'review',
+                // optional transition-level metadata
+                'metadata' => [
+                    // any data
+                ]
+            ],
+            'publish' => [
+                'from' => 'review',
+                'to' => 'published'
+            ],
+            'reject' => [
+                'from' => 'review',
+                'to' => 'rejected'
+            ]
+        ],
+    ]
+];
+```
+
+A more minimal setup (for a workflow on an eloquent model).
+
+```php
+<?php
+
+// Simple workflow. Sets type 'workflow', with a 'multiple_state' marking store
+// on the 'marking' property of any 'App\BlogPost' model.
+return [
+    'simple' => [
+        'supports' => ['App\BlogPost'], // objects this workflow supports
         'places' => ['draft', 'review', 'rejected', 'published'],
         'transitions' => [
             'to_review' => [

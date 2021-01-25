@@ -1,16 +1,12 @@
 <?php
+
 namespace Tests;
 
-use ReflectionProperty;
-use Tests\Fixtures\TestObject;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Workflow\Workflow;
-use Symfony\Component\Workflow\StateMachine;
-use ZeroDaHero\LaravelWorkflow\WorkflowRegistry;
-use Symfony\Component\Workflow\MarkingStore\SingleStateMarkingStore;
+use Tests\Fixtures\TestObject;
 use ZeroDaHero\LaravelWorkflow\Exceptions\DuplicateWorkflowException;
-use Symfony\Component\Workflow\MarkingStore\MultipleStateMarkingStore;
 use ZeroDaHero\LaravelWorkflow\Exceptions\RegistryNotTrackedException;
+use ZeroDaHero\LaravelWorkflow\WorkflowRegistry;
 
 class WorkflowTrackingTest extends TestCase
 {
@@ -28,14 +24,14 @@ class WorkflowTrackingTest extends TestCase
                     't2' => [
                         'from' => 'b',
                         'to' => 'c',
-                    ]
+                    ],
                 ],
-            ]
+            ],
         ];
 
         $registryConfig = [
             'track_loaded' => true,
-            'ignore_duplicates' => false
+            'ignore_duplicates' => false,
         ];
 
         $registry = new WorkflowRegistry($config, $registryConfig);
@@ -60,14 +56,14 @@ class WorkflowTrackingTest extends TestCase
                     't2' => [
                         'from' => 'b',
                         'to' => 'c',
-                    ]
+                    ],
                 ],
-            ]
+            ],
         ];
 
         $registryConfig = [
             'track_loaded' => true,
-            'ignore_duplicates' => true
+            'ignore_duplicates' => true,
         ];
 
         $registry = new WorkflowRegistry($config, $registryConfig);
@@ -93,14 +89,14 @@ class WorkflowTrackingTest extends TestCase
                     't2' => [
                         'from' => 'b',
                         'to' => 'c',
-                    ]
+                    ],
                 ],
-            ]
+            ],
         ];
 
         $registryConfig = [
             'track_loaded' => false,
-            'ignore_duplicates' => true
+            'ignore_duplicates' => true,
         ];
 
         $registry = new WorkflowRegistry($config, $registryConfig);

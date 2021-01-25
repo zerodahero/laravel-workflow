@@ -44,7 +44,7 @@ abstract class BaseEvent implements Serializable
             'marking' => serialize($this->originalEvent->getMarking()),
             'transition' => serialize($this->originalEvent->getTransition()),
             'workflow' => [
-                'name' => $this->originalEvent->getWorkflowName()
+                'name' => $this->originalEvent->getWorkflowName(),
             ],
         ]);
     }

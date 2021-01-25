@@ -24,7 +24,7 @@ class WorkflowServiceProvider extends ServiceProvider
 
         $this->publishes([
             "${configPath}/workflow.php" => $this->publishPath('workflow.php'),
-            "${configPath}/workflow_registry.php" => $this->publishPath('workflow_registry.php')
+            "${configPath}/workflow_registry.php" => $this->publishPath('workflow_registry.php'),
         ], 'config');
     }
 
@@ -45,22 +45,9 @@ class WorkflowServiceProvider extends ServiceProvider
         $this->app->singleton('workflow', function ($app) {
             $workflowConfigs = $app->make('config')->get('workflow');
             $registryConfig = $app->make('config')->get('workflow_registry');
+
             return new WorkflowRegistry($workflowConfigs, $registryConfig);
         });
-    }
-
-    protected function configPath()
-    {
-        return __DIR__ . '/../config';
-    }
-    
-    protected function publishPath($configFile)
-    {
-        if (function_exists('config_path')) {
-            return config_path($configFile);
-        } else {
-            return base_path('config/' . $configFile);
-        }
     }
 
     /**
@@ -71,5 +58,19 @@ class WorkflowServiceProvider extends ServiceProvider
     public function provides()
     {
         return ['workflow'];
+    }
+
+    protected function configPath()
+    {
+        return __DIR__ . '/../config';
+    }
+
+    protected function publishPath($configFile)
+    {
+        if (function_exists('config_path')) {
+            return config_path($configFile);
+        } else {
+            return base_path('config/' . $configFile);
+        }
     }
 }

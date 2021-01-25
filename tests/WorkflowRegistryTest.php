@@ -1,25 +1,31 @@
 <?php
+
 namespace Tests;
 
-use ReflectionProperty;
-use Tests\Fixtures\TestObject;
-use PHPUnit\Framework\TestCase;
-use Tests\Fixtures\TestCustomObject;
-use Symfony\Component\Workflow\Workflow;
-use Symfony\Component\Workflow\StateMachine;
-use ZeroDaHero\LaravelWorkflow\WorkflowRegistry;
-use Symfony\Component\Workflow\MarkingStore\MethodMarkingStore;
-use ZeroDaHero\LaravelWorkflow\MarkingStores\EloquentMarkingStore;
 use Illuminate\Support\Facades\Event;
+use ReflectionProperty;
+use Symfony\Component\Workflow\MarkingStore\MethodMarkingStore;
+use Symfony\Component\Workflow\StateMachine;
+use Symfony\Component\Workflow\Workflow;
+use Tests\Fixtures\TestCustomObject;
+use Tests\Fixtures\TestObject;
+use Tests\Helpers\CanAccessProtected;
+use ZeroDaHero\LaravelWorkflow\MarkingStores\EloquentMarkingStore;
+use ZeroDaHero\LaravelWorkflow\WorkflowRegistry;
 
 class WorkflowRegistryTest extends BaseWorkflowTestCase
 {
+    use CanAccessProtected;
+
     protected function setUp(): void
     {
         parent::setUp();
         Event::fake();
     }
 
+    /**
+    * @test
+    */
     public function testIfWorkflowIsRegistered()
     {
         $config = [
@@ -34,9 +40,9 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
                     't2' => [
                         'from' => 'b',
                         'to' => 'c',
-                    ]
+                    ],
                 ],
-            ]
+            ],
         ];
 
         $registry = new WorkflowRegistry($config);
@@ -52,6 +58,9 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
         $this->assertInstanceof(EloquentMarkingStore::class, $markingStore);
     }
 
+    /**
+     * @test
+     */
     public function testIfStateMachineIsRegistered()
     {
         $config = [
@@ -70,9 +79,9 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
                     't2' => [
                         'from' => 'b',
                         'to' => 'c',
-                    ]
+                    ],
                 ],
-            ]
+            ],
         ];
 
         $registry = new WorkflowRegistry($config);
@@ -88,6 +97,9 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
         $this->assertInstanceOf(EloquentMarkingStore::class, $markingStore);
     }
 
+    /**
+     * @test
+     */
     public function testEloquentMarkingStoreIsRegistered()
     {
         $config = [
@@ -107,9 +119,9 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
                     't2' => [
                         'from' => 'b',
                         'to' => 'c',
-                    ]
+                    ],
                 ],
-            ]
+            ],
         ];
 
         $registry = new WorkflowRegistry($config);
@@ -125,6 +137,9 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
         $this->assertInstanceOf(MethodMarkingStore::class, $markingStore);
     }
 
+    /**
+     * @test
+     */
     public function testIfTransitionsWithSameNameCanBothBeUsed()
     {
         $config = [
@@ -147,9 +162,9 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
                         'name' => 't2',
                         'from' => 'b',
                         'to' => 'c',
-                    ]
+                    ],
                 ],
-            ]
+            ],
         ];
 
         $registry = new WorkflowRegistry($config);
@@ -171,11 +186,14 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
         $this->assertTrue($workflow->can($subject, 't1'));
     }
 
+    /**
+     * @test
+     */
     public function testWhenMultipleFromIsUsed()
     {
         $config = [
             'straight' => [
-                'type'=> 'state_machine',
+                'type' => 'state_machine',
                 'supports' => ['Tests\Fixtures\TestObject'],
                 'places' => ['a', 'b', 'c'],
                 'transitions' => [
@@ -188,7 +206,7 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
                         'name' => 't2',
                         'from' => [
                             'a',
-                            'b'
+                            'b',
                         ],
                         'to' => 'c',
                     ],
@@ -211,6 +229,9 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
         $this->assertTrue($workflow->can($subject, 't2'));
     }
 
+    /**
+     * @test
+     */
     public function testIfInitialPlaceIsRegistered()
     {
         $config = [
@@ -225,10 +246,10 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
                     't2' => [
                         'from' => 'b',
                         'to' => 'a',
-                    ]
+                    ],
                 ],
-                'initial_places' => 'c'
-            ]
+                'initial_places' => 'c',
+            ],
         ];
 
         $registry = new WorkflowRegistry($config);
@@ -246,6 +267,9 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
         $this->assertEquals(['c'], $workflow->getDefinition()->getInitialPlaces());
     }
 
+    /**
+     * @test
+     */
     public function testIfCustomMarkingPropertyIsUsed()
     {
         $config = [
@@ -254,7 +278,7 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
                 'places' => ['a', 'b', 'c'],
                 'marking_store' => [
                     'type' => 'single_state',
-                    'property' => 'state'
+                    'property' => 'state',
                 ],
                 'transitions' => [
                     't1' => [
@@ -264,10 +288,10 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
                     't2' => [
                         'from' => 'b',
                         'to' => 'a',
-                    ]
+                    ],
                 ],
-                'initial_places' => 'c'
-            ]
+                'initial_places' => 'c',
+            ],
         ];
 
         $registry = new WorkflowRegistry($config);
@@ -286,5 +310,79 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
         $workflow->apply($subject, 't1');
 
         $this->assertEquals('b', $subject->getState());
+    }
+
+    /**
+     * @test
+     * @dataProvider providesAutomaticMarkingStoreScenarios
+     */
+    public function testIfMarkingStoreIsAutomatic(array $typeConfig, bool $expectSingleState)
+    {
+        $config = [
+            'test' => array_merge([
+                'supports' => ['Tests\Fixtures\TestObject'],
+                'places' => ['a', 'b', 'c'],
+                'transitions' => [
+                    't1' => [
+                        'from' => 'a',
+                        'to' => 'b',
+                    ],
+                    't2' => [
+                        'from' => 'b',
+                        'to' => 'c',
+                    ],
+                ],
+            ], $typeConfig),
+        ];
+
+        $registry = new WorkflowRegistry($config);
+        $subject = new TestObject;
+        $workflow = $registry->get($subject);
+
+        $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
+        $markingStoreProp->setAccessible(true);
+
+        $markingStore = $markingStoreProp->getValue($workflow);
+
+        $this->assertInstanceof(Workflow::class, $workflow);
+        $this->assertInstanceof(EloquentMarkingStore::class, $markingStore);
+        $this->assertEquals($expectSingleState, $this->getProtectedProperty($markingStore, 'singleState'));
+    }
+
+    public function providesAutomaticMarkingStoreScenarios()
+    {
+        return [
+            'default workflow, default multi' => [[], false],
+            'set workflow, default multi' => [[
+                'type' => 'workflow',
+            ], false],
+            'set workflow, override single' => [[
+                'type' => 'workflow',
+                'marking_store' => [
+                    'type' => 'single_state',
+                ],
+            ], true],
+            'set workflow, override multiple' => [[
+                'type' => 'workflow',
+                'marking_store' => [
+                    'type' => 'multiple_state',
+                ],
+            ], false],
+            'set state machine, default single' => [[
+                'type' => 'state_machine',
+            ], true],
+            'set state machine, override multi' => [[
+                'type' => 'state_machine',
+                'marking_store' => [
+                    'type' => 'multiple_state',
+                ],
+            ], false],
+            'set state machine, override single' => [[
+                'type' => 'state_machine',
+                'marking_store' => [
+                    'type' => 'single_state',
+                ],
+            ], true],
+        ];
     }
 }
