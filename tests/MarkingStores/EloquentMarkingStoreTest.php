@@ -19,7 +19,7 @@ class EloquentMarkingStoreTest extends TestCase
 
     /**
      * @test
-     * @dataProvider subjectDataProvider
+     * @dataProvider providesSubjects
      *
      * @param mixed $subject
      */
@@ -40,7 +40,7 @@ class EloquentMarkingStoreTest extends TestCase
         $this->assertEquals([$newMarking => 1], $setMarking->getPlaces());
     }
 
-    public function subjectDataProvider()
+    public function providesSubjects()
     {
         return [
             [new TestModel()],
@@ -50,7 +50,7 @@ class EloquentMarkingStoreTest extends TestCase
 
     /**
      * @test
-     * @dataProvider subjectDataProvider
+     * @dataProvider providesSubjects
      *
      * @param mixed $subject
      */
@@ -69,5 +69,36 @@ class EloquentMarkingStoreTest extends TestCase
         $setMarking = $store->getMarking($subject);
         $this->assertInstanceOf(Marking::class, $setMarking);
         $this->assertEquals($newMarking, $setMarking->getPlaces());
+    }
+
+    /**
+     * @test
+     * @dataProvider providesTypeSafeScenarios
+     *
+     * @param mixed $markingValue
+     * @param mixed $expectedMarkingValue
+     * @param mixed $expectedMarkingKey
+     */
+    public function testTypeSafeMarkings($markingValue, $expectedMarkingKey)
+    {
+        $store = new EloquentMarkingStore(true, 'marking');
+
+        $subject = new TestModel();
+
+        $subject->attributes['marking'] = $markingValue;
+
+        $marking = $store->getMarking($subject);
+        $this->assertInstanceOf(Marking::class, $marking);
+        $this->assertEquals([$expectedMarkingKey => 1], $marking->getPlaces());
+    }
+
+    public function providesTypeSafeScenarios()
+    {
+        return [
+            [0, '0'],
+            ['0', '0'],
+            [false, ''], // ick
+            ['false', 'false'],
+        ];
     }
 }
