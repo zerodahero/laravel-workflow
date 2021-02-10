@@ -40,9 +40,9 @@ abstract class BaseEvent implements Serializable
     {
         return serialize([
             'base_event_class' => get_class($this->originalEvent),
-            'subject' => serialize($this->originalEvent->getSubject()),
-            'marking' => serialize($this->originalEvent->getMarking()),
-            'transition' => serialize($this->originalEvent->getTransition()),
+            'subject' => $this->originalEvent->getSubject(),
+            'marking' => $this->originalEvent->getMarking(),
+            'transition' => $this->originalEvent->getTransition(),
             'workflow' => [
                 'name' => $this->originalEvent->getWorkflowName(),
             ],
@@ -53,9 +53,9 @@ abstract class BaseEvent implements Serializable
     {
         $unserialized = unserialize($serialized);
 
-        $subject = unserialize($unserialized['subject']);
-        $marking = unserialize($unserialized['marking']);
-        $transition = unserialize($unserialized['transition'] ?? null);
+        $subject = $unserialized['subject'];
+        $marking = $unserialized['marking'];
+        $transition = $unserialized['transition'] ?? null;
         $workflowName = $unserialized['workflow']['name'] ?? null;
         $workflow = Workflow::get($subject, $workflowName);
 
