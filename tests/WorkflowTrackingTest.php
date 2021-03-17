@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Illuminate\Events\Dispatcher;
 use PHPUnit\Framework\TestCase;
 use Tests\Fixtures\TestObject;
 use ZeroDaHero\LaravelWorkflow\Exceptions\DuplicateWorkflowException;
@@ -34,7 +35,7 @@ class WorkflowTrackingTest extends TestCase
             'ignore_duplicates' => false,
         ];
 
-        $registry = new WorkflowRegistry($config, $registryConfig);
+        $registry = new WorkflowRegistry($config, $registryConfig, new Dispatcher());
         $subject = new TestObject;
         $workflow = $registry->get($subject);
 
@@ -66,7 +67,7 @@ class WorkflowTrackingTest extends TestCase
             'ignore_duplicates' => true,
         ];
 
-        $registry = new WorkflowRegistry($config, $registryConfig);
+        $registry = new WorkflowRegistry($config, $registryConfig, new Dispatcher());
         $subject = new TestObject;
         $workflow = $registry->get($subject);
 
@@ -99,7 +100,7 @@ class WorkflowTrackingTest extends TestCase
             'ignore_duplicates' => true,
         ];
 
-        $registry = new WorkflowRegistry($config, $registryConfig);
+        $registry = new WorkflowRegistry($config, $registryConfig, new Dispatcher());
         $subject = new TestObject;
         $workflow = $registry->get($subject);
 

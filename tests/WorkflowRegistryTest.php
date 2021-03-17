@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Event;
 use ReflectionProperty;
 use Symfony\Component\Workflow\MarkingStore\MethodMarkingStore;
@@ -45,7 +46,7 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
             ],
         ];
 
-        $registry = new WorkflowRegistry($config);
+        $registry = new WorkflowRegistry($config, null, new Dispatcher());
         $subject = new TestObject;
         $workflow = $registry->get($subject);
 
@@ -84,7 +85,7 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
             ],
         ];
 
-        $registry = new WorkflowRegistry($config);
+        $registry = new WorkflowRegistry($config, null, new Dispatcher());
         $subject = new TestObject;
         $workflow = $registry->get($subject);
 
@@ -124,7 +125,7 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
             ],
         ];
 
-        $registry = new WorkflowRegistry($config);
+        $registry = new WorkflowRegistry($config, null, new Dispatcher());
         $subject = new TestObject;
         $workflow = $registry->get($subject);
 
@@ -167,7 +168,7 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
             ],
         ];
 
-        $registry = new WorkflowRegistry($config);
+        $registry = new WorkflowRegistry($config, null, new Dispatcher());
         $subject = new TestObject;
         $workflow = $registry->get($subject);
 
@@ -214,7 +215,7 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
             ],
         ];
 
-        $registry = new WorkflowRegistry($config);
+        $registry = new WorkflowRegistry($config, null, new Dispatcher());
         $subject = new TestObject;
         $workflow = $registry->get($subject);
 
@@ -252,7 +253,7 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
             ],
         ];
 
-        $registry = new WorkflowRegistry($config);
+        $registry = new WorkflowRegistry($config, null, new Dispatcher());
         $subject = new TestObject;
         $workflow = $registry->get($subject);
 
@@ -294,7 +295,7 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
             ],
         ];
 
-        $registry = new WorkflowRegistry($config);
+        $registry = new WorkflowRegistry($config, null, new Dispatcher());
         $subject = new TestCustomObject;
         $workflow = $registry->get($subject);
 
@@ -335,7 +336,7 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
             ], $typeConfig),
         ];
 
-        $registry = new WorkflowRegistry($config);
+        $registry = new WorkflowRegistry($config, null, new Dispatcher());
         $subject = new TestObject;
         $workflow = $registry->get($subject);
 

@@ -28,8 +28,7 @@ trait CanAccessProtected
      * Get a protected/private property on a class.
      *
      * @param object &$object Instantiated object to get the property from.
-     * @param string $property Property name to get.
-     * @param mixed $propertyName
+     * @param string $propertyName Property name to get.
      *
      * @return mixed Property value
      */
@@ -39,5 +38,18 @@ trait CanAccessProtected
         $property->setAccessible(true);
 
         return $property->getValue($object);
+    }
+
+    /**
+     * Get a protected/private property on a class.
+     *
+     * @param object &$object Instantiated object to get the property from.
+     * @param string $constantName
+     *
+     * @return mixed Property value
+     */
+    public function getProtectedConstant(&$object, $constantName)
+    {
+        return (new ReflectionClass($object))->getConstant($constantName);
     }
 }

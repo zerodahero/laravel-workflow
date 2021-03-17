@@ -2,6 +2,7 @@
 
 namespace ZeroDaHero\LaravelWorkflow;
 
+use Illuminate\Contracts\Events\Dispatcher as EventsDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Workflow\Definition;
 use Symfony\Component\Workflow\DefinitionBuilder;
@@ -13,7 +14,7 @@ use Symfony\Component\Workflow\StateMachine;
 use Symfony\Component\Workflow\SupportStrategy\InstanceOfSupportStrategy;
 use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Workflow;
-use ZeroDaHero\LaravelWorkflow\Events\WorkflowSubscriber;
+use ZeroDaHero\LaravelWorkflow\Events\DispatcherAdapter;
 use ZeroDaHero\LaravelWorkflow\Exceptions\DuplicateWorkflowException;
 use ZeroDaHero\LaravelWorkflow\Exceptions\RegistryNotTrackedException;
 use ZeroDaHero\LaravelWorkflow\MarkingStores\EloquentMarkingStore;
@@ -56,15 +57,12 @@ class WorkflowRegistry
      *
      * @throws \ReflectionException
      */
-    public function __construct(array $config, array $registryConfig = null)
+    public function __construct(array $config, array $registryConfig = null, EventsDispatcher $laravelDispatcher)
     {
         $this->registry = new Registry();
         $this->config = $config;
         $this->registryConfig = $registryConfig ?? $this->getDefaultRegistryConfig();
-        $this->dispatcher = new EventDispatcher();
-
-        $subscriber = new WorkflowSubscriber();
-        $this->dispatcher->addSubscriber($subscriber);
+        $this->dispatcher = new DispatcherAdapter($laravelDispatcher);
 
         foreach ($this->config as $name => $workflowData) {
             $this->addFromArray($name, $workflowData);

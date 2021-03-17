@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Illuminate\Contracts\Events\Dispatcher as EventsDispatcher;
 use Illuminate\Support\Facades\Event;
 use Symfony\Component\Workflow\WorkflowEvents;
 use Tests\Fixtures\TestObject;
@@ -14,7 +15,7 @@ use ZeroDaHero\LaravelWorkflow\Events\LeaveEvent;
 use ZeroDaHero\LaravelWorkflow\Events\TransitionEvent;
 use ZeroDaHero\LaravelWorkflow\WorkflowRegistry;
 
-class WorkflowSubscriberTest extends BaseWorkflowTestCase
+class WorkflowEventsTest extends BaseWorkflowTestCase
 {
     private $eventSets = [
         'workflow_enter' => [
@@ -62,7 +63,6 @@ class WorkflowSubscriberTest extends BaseWorkflowTestCase
             AnnounceEvent::class,
             'workflow.announce',
             'workflow.%s.announce',
-            'workflow.%s.announce.%s',
         ],
     ];
 
@@ -90,7 +90,7 @@ class WorkflowSubscriberTest extends BaseWorkflowTestCase
             ],
         ];
 
-        $registry = new WorkflowRegistry($config);
+        $registry = new WorkflowRegistry($config, null, $this->app->make(EventsDispatcher::class));
         $object = new TestObject();
         $workflow = $registry->get($object);
 
@@ -113,6 +113,7 @@ class WorkflowSubscriberTest extends BaseWorkflowTestCase
 
         // Announce happens after completed
         $this->assertEventSetDispatched('announce', 't1');
+        Event::assertDispatched('workflow.straight.announce.t2');
 
         $this->assertEventSetDispatched('guard', 't2');
     }
@@ -143,7 +144,7 @@ class WorkflowSubscriberTest extends BaseWorkflowTestCase
             ],
         ];
 
-        $registry = new WorkflowRegistry($config);
+        $registry = new WorkflowRegistry($config, null, $this->app->make(EventsDispatcher::class));
         $object = new TestObject();
         $workflow = $registry->get($object);
 

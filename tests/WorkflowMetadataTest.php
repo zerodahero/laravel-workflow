@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use Illuminate\Events\Dispatcher;
 use PHPUnit\Framework\TestCase;
 use Tests\Fixtures\TestObject;
 use ZeroDaHero\LaravelWorkflow\WorkflowRegistry;
@@ -45,7 +46,7 @@ class WorkflowMetadataTest extends TestCase
             ],
         ];
 
-        $registry = new WorkflowRegistry($config);
+        $registry = new WorkflowRegistry($config, null, new Dispatcher());
         $subject = new TestObject;
         $workflow = $registry->get($subject);
 

@@ -2,11 +2,9 @@
 
 namespace ZeroDaHero\LaravelWorkflow;
 
+use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Support\ServiceProvider;
 
-/**
- * @author Boris Koumondji <brexis@yahoo.fr>
- */
 class WorkflowServiceProvider extends ServiceProvider
 {
     protected $commands = [
@@ -43,10 +41,10 @@ class WorkflowServiceProvider extends ServiceProvider
         $this->commands($this->commands);
 
         $this->app->singleton('workflow', function ($app) {
-            $workflowConfigs = $app->make('config')->get('workflow');
+            $workflowConfigs = $app->make('config')->get('workflow', []);
             $registryConfig = $app->make('config')->get('workflow_registry');
 
-            return new WorkflowRegistry($workflowConfigs, $registryConfig);
+            return new WorkflowRegistry($workflowConfigs, $registryConfig, $app->make(Dispatcher::class));
         });
     }
 
@@ -67,10 +65,8 @@ class WorkflowServiceProvider extends ServiceProvider
 
     protected function publishPath($configFile)
     {
-        if (function_exists('config_path')) {
-            return config_path($configFile);
-        } else {
-            return base_path('config/' . $configFile);
-        }
+        return (function_exists('config_path'))
+            ? config_path($configFile)
+            : base_path('config/' . $configFile);
     }
 }
