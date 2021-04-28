@@ -50,24 +50,32 @@ class DispatcherAdapter implements EventDispatcherInterface
             return $symfonyEvent;
         }
 
-        $eventNameParts = explode('.', $eventName);
+        $event = $this->parseWorkflowEventFromEventName($eventName);
 
-        if (count($eventNameParts) === 2) {
-            $event = $eventNameParts[1];
-        } elseif (count($eventNameParts) >= 3) {
-            $event = $eventNameParts[2];
-        } else {
-            // fallback if unknown event name
-            return $symfonyEvent;
-        }
-
-        if (! array_key_exists($event, static::EVENT_MAP)) {
-            // fallback for no mapped event known
+        if (! $event) {
             return $symfonyEvent;
         }
 
         $translatedEventClass = static::EVENT_MAP[$event];
 
         return new $translatedEventClass($symfonyEvent);
+    }
+
+    private function parseWorkflowEventFromEventName(string $eventName)
+    {
+        $eventSearch = preg_match('/\.(?P<event>' . implode('|', array_keys(static::EVENT_MAP)) . ')(\.|$)/i', $eventName, $eventMatches);
+
+        if (! $eventSearch) {
+            // no results or error
+            return false;
+        }
+        $event = $eventMatches['event'] ?? false;
+
+        if (! array_key_exists($event, static::EVENT_MAP)) {
+            // fallback for no mapped event known
+            return false;
+        }
+
+        return $event;
     }
 }

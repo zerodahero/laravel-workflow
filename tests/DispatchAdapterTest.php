@@ -74,31 +74,40 @@ class DispatchAdapterTest extends TestCase
             AnnounceEvent::class => \Symfony\Component\Workflow\Event\AnnounceEvent::class,
         ];
 
-        foreach ($eventList as $eventType => $expectedEventClass) {
-            $transition = implode('', $faker->words(3));
-            $name = implode('', $faker->words(3));
-            $symfonyEvent = $reverseMap[$expectedEventClass];
-            $symfonyEvent = new $symfonyEvent(new stdClass(), new Marking(), new Transition($transition, [], []));
+        foreach ([
+            'no dots' => ['', ''],
+            'transition dot' => ['', '.'],
+            'name dot' => ['.', ''],
+            'both dot' => ['.','.'],
+        ] as $dotScenario => [$nameSeparator, $transitionSeparator]) {
+            foreach ($eventList as $eventType => $expectedEventClass) {
+                // Cover scenarios with '.' in the workflow name or transition name
+                $transition = implode($transitionSeparator, $faker->words(3));
+                $name = implode($nameSeparator, $faker->words(3));
 
-            foreach ([
-                "workflow.${eventType}",
-                "workflow.${name}.${eventType}",
-                "workflow.${name}.${eventType}.${transition}",
-            ] as $eventName) {
-                yield $eventName => [
-                    $expectedEventClass,
+                $symfonyEvent = $reverseMap[$expectedEventClass];
+                $symfonyEvent = new $symfonyEvent(new stdClass(), new Marking(), new Transition($transition, [], []));
+
+                foreach ([
+                    "workflow.${eventType}",
+                    "workflow.${name}.${eventType}",
+                    "workflow.${name}.${eventType}.${transition}",
+                ] as $eventName) {
+                    yield "${eventName} (${dotScenario})" => [
+                        $expectedEventClass,
+                        $symfonyEvent,
+                        $eventName,
+                        $eventName,
+                    ];
+                }
+
+                yield "No event name ${eventType} (${dotScenario})" => [
+                    get_class($symfonyEvent),
                     $symfonyEvent,
-                    $eventName,
-                    $eventName,
+                    null,
+                    get_class($symfonyEvent),
                 ];
             }
-
-            yield "No event name ${eventType}" => [
-                get_class($symfonyEvent),
-                $symfonyEvent,
-                null,
-                get_class($symfonyEvent),
-            ];
         }
     }
 }
