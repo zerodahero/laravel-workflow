@@ -103,7 +103,7 @@ class EventTest extends TestCase
     {
         $app['config']['workflow'] = [
             'straight' => [
-                'type' => 'state_machine',
+                'type' => 'workflow',
                 'marking_store' => [
                     'type' => 'single_state',
                 ],
@@ -123,7 +123,7 @@ class EventTest extends TestCase
                 ],
             ],
             'straight.test' => [
-                'type' => 'state_machine',
+                'type' => 'workflow',
                 'marking_store' => [
                     'type' => 'single_state',
                 ],
