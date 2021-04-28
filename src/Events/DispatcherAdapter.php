@@ -3,6 +3,7 @@
 namespace ZeroDaHero\LaravelWorkflow\Events;
 
 use Illuminate\Contracts\Events\Dispatcher;
+use Symfony\Component\Workflow\Event\Event as SymfonyWorkflowEvent;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class DispatcherAdapter implements EventDispatcherInterface
@@ -48,6 +49,17 @@ class DispatcherAdapter implements EventDispatcherInterface
     {
         if (is_null($eventName)) {
             return new UnknownEvent($symfonyEvent);
+        }
+
+        // Parse out the workflow name in case it has a dot character in it.
+        try {
+            if ($symfonyEvent instanceof SymfonyWorkflowEvent && $symfonyEvent->getWorkflow()) {
+                $workflowName = str_replace('.', '__', $symfonyEvent->getWorkflowName());
+                $eventName = str_replace("workflow.{$symfonyEvent->getWorkflowName()}", "workflow.{$workflowName}", $eventName);
+            }
+        } catch (\TypeError $e) {
+            // NOTE: Catching a `TypeError` due to an issue with Symfony workflows which can result in the following error:
+            //       "Return value of Symfony\Component\Workflow\Event\Event::getWorkflow() must be an instance of Symfony\Component\Workflow\WorkflowInterface, null returned".
         }
 
         $eventNameParts = explode('.', $eventName);
