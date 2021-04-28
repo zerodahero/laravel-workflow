@@ -47,7 +47,7 @@ class DispatcherAdapter implements EventDispatcherInterface
     private function translateEvent(?string $eventName, object $symfonyEvent): object
     {
         if (is_null($eventName)) {
-            return $symfonyEvent;
+            return new UnknownEvent($symfonyEvent);
         }
 
         $eventNameParts = explode('.', $eventName);
@@ -58,12 +58,12 @@ class DispatcherAdapter implements EventDispatcherInterface
             $event = $eventNameParts[2];
         } else {
             // fallback if unknown event name
-            return $symfonyEvent;
+            return new UnknownEvent($symfonyEvent);
         }
 
         if (! array_key_exists($event, static::EVENT_MAP)) {
             // fallback for no mapped event known
-            return $symfonyEvent;
+            return new UnknownEvent($symfonyEvent);
         }
 
         $translatedEventClass = static::EVENT_MAP[$event];
