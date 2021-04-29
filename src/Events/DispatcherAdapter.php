@@ -51,35 +51,32 @@ class DispatcherAdapter implements EventDispatcherInterface
             return new UnknownEvent($symfonyEvent);
         }
 
-        // Parse out the workflow name in case it has a dot character in it.
-        try {
-            if ($symfonyEvent instanceof SymfonyWorkflowEvent && $symfonyEvent->getWorkflow()) {
-                $workflowName = str_replace('.', '__', $symfonyEvent->getWorkflowName());
-                $eventName = str_replace("workflow.{$symfonyEvent->getWorkflowName()}", "workflow.{$workflowName}", $eventName);
-            }
-        } catch (\TypeError $e) {
-            // NOTE: Catching a `TypeError` due to an issue with Symfony workflows which can result in the following error:
-            //       "Return value of Symfony\Component\Workflow\Event\Event::getWorkflow() must be an instance of Symfony\Component\Workflow\WorkflowInterface, null returned".
-        }
+        $event = $this->parseWorkflowEventFromEventName($eventName);
 
-        $eventNameParts = explode('.', $eventName);
-
-        if (count($eventNameParts) === 2) {
-            $event = $eventNameParts[1];
-        } elseif (count($eventNameParts) >= 3) {
-            $event = $eventNameParts[2];
-        } else {
-            // fallback if unknown event name
-            return new UnknownEvent($symfonyEvent);
-        }
-
-        if (! array_key_exists($event, static::EVENT_MAP)) {
-            // fallback for no mapped event known
+        if (! $event) {
             return new UnknownEvent($symfonyEvent);
         }
 
         $translatedEventClass = static::EVENT_MAP[$event];
 
         return new $translatedEventClass($symfonyEvent);
+    }
+
+    private function parseWorkflowEventFromEventName(string $eventName)
+    {
+        $eventSearch = preg_match('/\.(?P<event>' . implode('|', array_keys(static::EVENT_MAP)) . ')(\.|$)/i', $eventName, $eventMatches);
+
+        if (! $eventSearch) {
+            // no results or error
+            return false;
+        }
+        $event = $eventMatches['event'] ?? false;
+
+        if (! array_key_exists($event, static::EVENT_MAP)) {
+            // fallback for no mapped event known
+            return false;
+        }
+
+        return $event;
     }
 }
