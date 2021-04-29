@@ -3,7 +3,6 @@
 namespace ZeroDaHero\LaravelWorkflow\Events;
 
 use Illuminate\Contracts\Events\Dispatcher;
-use Symfony\Component\Workflow\Event\Event as SymfonyWorkflowEvent;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class DispatcherAdapter implements EventDispatcherInterface
