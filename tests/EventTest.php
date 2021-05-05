@@ -2,8 +2,11 @@
 
 namespace Tests;
 
+use Event;
 use Orchestra\Testbench\TestCase;
 use Tests\Fixtures\TestModel;
+use Tests\Fixtures\TestEloquentModel;
+use Tests\Fixtures\TestWorkflowListener;
 use Workflow;
 use ZeroDaHero\LaravelWorkflow\Events\TransitionEvent;
 use ZeroDaHero\LaravelWorkflow\Facades\WorkflowFacade;
@@ -64,6 +67,19 @@ class EventTest extends TestCase
         $this->assertNull($event->doSomethingUndefined());
     }
 
+    /**
+     * @test
+     */
+    public function testQueueableEvents()
+    {
+        Event::listen('workflow.straight.test.transition.to_there', [TestWorkflowListener::class, 'handle']);
+        $subject = app(TestEloquentModel::class);
+        $workflow = Workflow::get($subject, 'straight.test');
+        $this->assertTrue($subject->workflow_can('to_there', 'straight.test'));
+        $subject->workflow_apply('to_there', 'straight.test');
+        $this->assertEquals('there', $subject->marking);
+    }
+
     protected function getPackageProviders($app)
     {
         return [WorkflowServiceProvider::class];
@@ -91,7 +107,29 @@ class EventTest extends TestCase
                 'marking_store' => [
                     'type' => 'single_state',
                 ],
-                'supports' => ['Tests\Fixtures\TestModel'],
+                'supports' => [
+                    TestModel::class,
+                ],
+                'places' => ['here', 'there', 'somewhere'],
+                'transitions' => [
+                    'to_there' => [
+                        'from' => 'here',
+                        'to' => 'there',
+                    ],
+                    'to_somewhere' => [
+                        'from' => 'there',
+                        'to' => 'somewhere',
+                    ],
+                ],
+            ],
+            'straight.test' => [
+                'type' => 'workflow',
+                'marking_store' => [
+                    'type' => 'single_state',
+                ],
+                'supports' => [
+                    TestEloquentModel::class,
+                ],
                 'places' => ['here', 'there', 'somewhere'],
                 'transitions' => [
                     'to_there' => [
