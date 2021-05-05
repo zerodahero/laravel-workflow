@@ -2,6 +2,6 @@
 
 namespace ZeroDaHero\LaravelWorkflow\Events;
 
-class UnknownEvent extends BaseEvent
+class WorkflowEvent extends BaseEvent
 {
 }
