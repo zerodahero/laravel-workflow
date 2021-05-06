@@ -1,4 +1,4 @@
-# Laravel workflow [![Build Status](https://travis-ci.org/zerodahero/laravel-workflow.svg?branch=master)](https://travis-ci.org/zerodahero/laravel-workflow)
+# Laravel workflow [![Build Status](https://travis-ci.com/zerodahero/laravel-workflow.svg?branch=develop)](https://travis-ci.org/zerodahero/laravel-workflow)
 
 This is a fork from [brexis/laravel-workflow](https://github.com/brexis/laravel-workflow). My current needs for this package are a bit more bleeding-edge than seem to be maintainable by the other packages. Massive kudos to brexis for the original work and adaptation on this.
 
