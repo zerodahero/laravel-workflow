@@ -19,6 +19,7 @@ use ZeroDaHero\LaravelWorkflow\Events\EnterEvent;
 use ZeroDaHero\LaravelWorkflow\Events\GuardEvent;
 use ZeroDaHero\LaravelWorkflow\Events\LeaveEvent;
 use ZeroDaHero\LaravelWorkflow\Events\TransitionEvent;
+use ZeroDaHero\LaravelWorkflow\Events\WorkflowEvent;
 
 class DispatchAdapterTest extends TestCase
 {
@@ -102,7 +103,7 @@ class DispatchAdapterTest extends TestCase
                 }
 
                 yield "No event name ${eventType} (${dotScenario})" => [
-                    get_class($symfonyEvent),
+                    WorkflowEvent::class,
                     $symfonyEvent,
                     null,
                     get_class($symfonyEvent),
