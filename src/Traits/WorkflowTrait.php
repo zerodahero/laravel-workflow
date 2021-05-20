@@ -9,7 +9,7 @@ use Workflow;
  */
 trait WorkflowTrait
 {
-    public function workflow_apply($transition, $workflow = null, array $context = []))
+    public function workflow_apply($transition, $workflow = null, array $context = [])
     {
         return Workflow::get($this, $workflow)->apply($this, $transition, $context);
     }
