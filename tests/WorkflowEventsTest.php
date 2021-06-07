@@ -184,6 +184,59 @@ class WorkflowEventsTest extends BaseWorkflowTestCase
         }
     }
 
+    /**
+     * @test
+     */
+    public function testIfWorkflowEmitsEventsWithContext()
+    {
+        Event::fake();
+
+        $config = [
+            'straight' => [
+                'supports' => [TestObject::class],
+                'places' => ['a', 'b', 'c'],
+                'transitions' => [
+                    't1' => [
+                        'from' => 'a',
+                        'to' => 'b',
+                    ],
+                    't2' => [
+                        'from' => 'b',
+                        'to' => 'c',
+                    ],
+                ],
+            ],
+        ];
+
+        $registry = new WorkflowRegistry($config, null, $this->app->make(EventsDispatcher::class));
+        $object = new TestObject();
+        $workflow = $registry->get($object);
+
+        $context = ['context1' => 42, 'context2' => 'banana'];
+
+        $workflow->apply($object, 't1', $context);
+
+        // Symfony Workflow 4.2.9 fires entered event on initialize
+        Event::assertDispatched(function (EnteredEvent $event) use ($context) {
+            return $event->getContext() == $context;
+        });
+        Event::assertDispatched(function (LeaveEvent $event) use ($context) {
+            return $event->getContext() == $context;
+        });
+        Event::assertDispatched(function (TransitionEvent $event) use ($context) {
+            return $event->getContext() == $context;
+        });
+        Event::assertDispatched(function (EnterEvent $event) use ($context) {
+            return $event->getContext() == $context;
+        });
+        Event::assertDispatched(function (CompletedEvent $event) use ($context) {
+            return $event->getContext() == $context;
+        });
+        Event::assertDispatched(function (AnnounceEvent $event) use ($context) {
+            return $event->getContext() == $context;
+        });
+    }
+
     private function assertEventSetDispatched(string $eventSet, ?string $arg = null, bool $expected = true)
     {
         $workflow = 'straight';

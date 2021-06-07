@@ -3,7 +3,6 @@
 namespace ZeroDaHero\LaravelWorkflow;
 
 use Illuminate\Contracts\Events\Dispatcher as EventsDispatcher;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Workflow\Definition;
 use Symfony\Component\Workflow\DefinitionBuilder;
 use Symfony\Component\Workflow\Exception\InvalidArgumentException;
@@ -14,6 +13,7 @@ use Symfony\Component\Workflow\StateMachine;
 use Symfony\Component\Workflow\SupportStrategy\InstanceOfSupportStrategy;
 use Symfony\Component\Workflow\Transition;
 use Symfony\Component\Workflow\Workflow;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use ZeroDaHero\LaravelWorkflow\Events\DispatcherAdapter;
 use ZeroDaHero\LaravelWorkflow\Exceptions\DuplicateWorkflowException;
 use ZeroDaHero\LaravelWorkflow\Exceptions\RegistryNotTrackedException;
@@ -37,7 +37,7 @@ class WorkflowRegistry
     protected $registryConfig;
 
     /**
-     * @var EventDispatcher
+     * @var EventDispatcherInterface
      */
     protected $dispatcher;
 
