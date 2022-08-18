@@ -169,7 +169,7 @@ class WorkflowRegistry
                         $metadata['transitions']->attach($transitionObj, $transition['metadata']);
                     }
                 }
-            }  
+            }
         }
 
         $metadataStore = new InMemoryMetadataStore(
