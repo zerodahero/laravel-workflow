@@ -2,31 +2,12 @@
 
 namespace Tests;
 
-use ZeroDaHero\LaravelWorkflow\Commands\WorkflowDumpCommand;
 use Mockery;
+use Illuminate\Support\Facades\Storage;
+use ZeroDaHero\LaravelWorkflow\Commands\WorkflowDumpCommand;
 
 class WorkflowDumpCommandTest extends BaseWorkflowTestCase
 {
-    protected function getEnvironmentSetUp($app)
-    {
-        $app['config']['workflow'] = [
-            'straight' => [
-                'supports' => ['Tests\Fixtures\TestObject'],
-                'places' => ['a', 'b', 'c'],
-                'transitions' => [
-                    't1' => [
-                        'from' => 'a',
-                        'to' => 'b',
-                    ],
-                    't2' => [
-                        'from' => 'b',
-                        'to' => 'c',
-                    ]
-                ],
-            ]
-        ];
-    }
-
     public function testShouldThrowExceptionForUndefinedWorkflow()
     {
         $command = Mockery::mock(WorkflowDumpCommand::class)
@@ -40,6 +21,12 @@ class WorkflowDumpCommandTest extends BaseWorkflowTestCase
             ->shouldReceive('option')
             ->with('class')
             ->andReturn('Tests\Fixtures\TestObject')
+            ->shouldReceive('option')
+            ->with('disk')
+            ->andReturn('local')
+            ->shouldReceive('option')
+            ->with('path')
+            ->andReturn('/')
             ->getMock();
 
         $this->expectException(\Exception::class);
@@ -60,6 +47,12 @@ class WorkflowDumpCommandTest extends BaseWorkflowTestCase
             ->shouldReceive('option')
             ->with('class')
             ->andReturn('Tests\Fixtures\FakeObject')
+            ->shouldReceive('option')
+            ->with('disk')
+            ->andReturn('local')
+            ->shouldReceive('option')
+            ->with('path')
+            ->andReturn('/')
             ->getMock();
 
         $this->expectException(\Exception::class);
@@ -71,8 +64,13 @@ class WorkflowDumpCommandTest extends BaseWorkflowTestCase
 
     public function testWorkflowCommand()
     {
-        if (file_exists('straight.png')) {
-            unlink('straight.png');
+        $optionalPath = '/my/path';
+        $disk = 'public';
+
+        Storage::fake($disk);
+
+        if (Storage::disk($disk)->exists($optionalPath . '/straight.png')) {
+            Storage::disk($disk)->delete($optionalPath . '/straight.png');
         }
 
         $command = Mockery::mock(WorkflowDumpCommand::class)
@@ -86,10 +84,36 @@ class WorkflowDumpCommandTest extends BaseWorkflowTestCase
             ->shouldReceive('option')
             ->with('class')
             ->andReturn('Tests\Fixtures\TestObject')
+            ->shouldReceive('option')
+            ->with('disk')
+            ->andReturn($disk)
+            ->shouldReceive('option')
+            ->with('path')
+            ->andReturn($optionalPath)
             ->getMock();
 
         $command->handle();
 
-        $this->assertTrue(file_exists('straight.png'));
+        Storage::disk($disk)->assertExists($optionalPath . '/straight.png');
+    }
+
+    protected function getEnvironmentSetUp($app)
+    {
+        $app['config']['workflow'] = [
+            'straight' => [
+                'supports' => ['Tests\Fixtures\TestObject'],
+                'places' => ['a', 'b', 'c'],
+                'transitions' => [
+                    't1' => [
+                        'from' => 'a',
+                        'to' => 'b',
+                    ],
+                    't2' => [
+                        'from' => 'b',
+                        'to' => 'c',
+                    ],
+                ],
+            ],
+        ];
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Fixtures;
 
 class TestObject
@@ -13,6 +14,7 @@ class TestObject
     public function setMarking($marking)
     {
         $this->marking = $marking;
+
         return $this;
     }
 }

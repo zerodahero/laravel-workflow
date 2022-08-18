@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Fixtures;
 
 class TestCustomObject
@@ -13,6 +14,7 @@ class TestCustomObject
     public function setState($state)
     {
         $this->state = $state;
+
         return $this;
     }
 }

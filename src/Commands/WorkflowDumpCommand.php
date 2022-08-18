@@ -3,12 +3,14 @@
 namespace ZeroDaHero\LaravelWorkflow\Commands;
 
 use Config;
+use Storage;
 use Workflow;
 use Exception;
 use Illuminate\Console\Command;
 use Symfony\Component\Process\Process;
+use Symfony\Component\Workflow\StateMachine;
 use Symfony\Component\Workflow\Dumper\GraphvizDumper;
-use Symfony\Component\Workflow\Workflow as SymfonyWorkflow;
+use Symfony\Component\Workflow\Dumper\StateMachineGraphvizDumper;
 
 /**
  * @author Boris Koumondji <brexis@yahoo.fr>
@@ -23,7 +25,9 @@ class WorkflowDumpCommand extends Command
     protected $signature = 'workflow:dump
         {workflow : name of workflow from configuration}
         {--class= : the support class name}
-        {--format=png : the image format}';
+        {--format=png : the image format}
+        {--disk=local : the storage disk name}
+        {--path= : the optional path within selected disk}';
 
     /**
      * The console command description.
@@ -44,13 +48,24 @@ class WorkflowDumpCommand extends Command
         $format = $this->option('format');
         $class = $this->option('class');
         $config = Config::get('workflow');
+        $disk = $this->option('disk');
+        $optionalPath = $this->option('path');
 
-        if (!isset($config[$workflowName])) {
-            throw new Exception("Workflow $workflowName is not configured.");
+        if ($disk === 'local') {
+            $optionalPath ??= '.';
+        }
+        $path = Storage::disk($disk)->path($optionalPath);
+
+        if ($optionalPath && ! Storage::disk($disk)->exists($optionalPath)) {
+            Storage::disk($disk)->makeDirectory($optionalPath);
+        }
+
+        if (! isset($config[$workflowName])) {
+            throw new Exception("Workflow ${workflowName} is not configured.");
         }
 
         if (false === array_search($class, $config[$workflowName]['supports'])) {
-            throw new Exception("Workflow $workflowName has no support for class $class." .
+            throw new Exception("Workflow ${workflowName} has no support for class ${class}." .
                 ' Please specify a valid support class with the --class option.');
         }
 
@@ -60,9 +75,14 @@ class WorkflowDumpCommand extends Command
 
         $dumper = new GraphvizDumper();
 
-        $dotCommand = ['dot', "-T$format", '-o', "$workflowName.$format"];
+        if ($workflow instanceof StateMachine) {
+            $dumper = new StateMachineGraphvizDumper();
+        }
+
+        $dotCommand = ['dot', "-T${format}", '-o', "${workflowName}.${format}"];
 
         $process = new Process($dotCommand);
+        $process->setWorkingDirectory($path);
         $process->setInput($dumper->dump($definition));
         $process->mustRun();
     }

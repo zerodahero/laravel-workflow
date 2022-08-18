@@ -1,6 +1,10 @@
-vendor/
-straight.png
-composer.lock
 .idea
+.php_cs
+.php_cs.cache
 .phpunit.result.cache
 .vscode
+composer.lock
+tests/coverage
+docs
+vendor
+.php-cs-fixer.cache

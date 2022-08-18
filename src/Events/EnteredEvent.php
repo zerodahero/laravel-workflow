@@ -7,5 +7,4 @@ namespace ZeroDaHero\LaravelWorkflow\Events;
  */
 class EnteredEvent extends BaseEvent
 {
-    //
 }

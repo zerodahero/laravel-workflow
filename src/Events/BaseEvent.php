@@ -2,73 +2,54 @@
 
 namespace ZeroDaHero\LaravelWorkflow\Events;
 
-use Serializable;
-use Symfony\Component\Workflow\Event\Event;
 use Workflow;
+use Symfony\Component\Workflow\Event\Event;
 
 /**
- * @method Marking getMarking()
+ * @method \Symfony\Component\Workflow\Marking getMarking()
  * @method object getSubject()
- * @method Transition getTransition()
- * @method WorkflowInterface getWorkflow()
+ * @method \Symfony\Component\Workflow\Transition getTransition()
+ * @method \Symfony\Component\Workflow\WorkflowInterface getWorkflow()
  * @method string getWorkflowName()
  * @method mixed getMetadata(string $key, $subject)
  */
-abstract class BaseEvent implements Serializable
+abstract class BaseEvent extends Event
 {
-    /**
-     * @var Event
-     */
-    protected $originalEvent;
-
-    public function __construct(Event $event)
+    public function __serialize(): array
     {
-        $this->originalEvent = $event;
-    }
-
-    /**
-     * Return the original event
-     *
-     * @return Event
-     */
-    public function getOriginalEvent()
-    {
-        return $this->originalEvent;
-    }
-
-    public function serialize()
-    {
-        return serialize([
-            'base_event_class' => get_class($this->originalEvent),
-            'subject' => serialize($this->originalEvent->getSubject()),
-            'marking' => serialize($this->originalEvent->getMarking()),
-            'transition' => serialize($this->originalEvent->getTransition()),
+        return [
+            'base_event_class' => get_class($this),
+            'subject' => $this->getSubject(),
+            'marking' => $this->getMarking(),
+            'transition' => $this->getTransition(),
             'workflow' => [
-                'name' => $this->originalEvent->getWorkflowName()
+                'name' => $this->getWorkflowName(),
             ],
-        ]);
+        ];
     }
 
-    public function unserialize($serialized)
+    public function __unserialize(array $data): void
     {
-        $unserialized = unserialize($serialized);
-
-        $subject = unserialize($unserialized['subject']);
-        $marking = unserialize($unserialized['marking']);
-        $transition = unserialize($unserialized['transition'] ?? null);
-        $workflowName = $unserialized['workflow']['name'] ?? null;
-        $workflow = Workflow::get($subject, $workflowName);
-
-        $eventClass = $unserialized['base_event_class'] ?? Event::class;
-        $event = new $eventClass($subject, $marking, $transition, $workflow);
-
-        $this->originalEvent = $event;
+        $workflowName = $data['workflow']['name'] ?? null;
+        parent::__construct(
+            $data['subject'],
+            $data['marking'],
+            $data['transition'],
+            Workflow::get($data['subject'], $workflowName)
+        );
     }
 
-    public function __call($name, $arguments)
+    /**
+     * Creates a new instance from the base Symfony event
+     */
+    public static function newFromBase(Event $symfonyEvent)
     {
-        if (method_exists($this->originalEvent, $name)) {
-            return call_user_func_array([$this->originalEvent, $name], $arguments);
-        }
+        return new static(
+            $symfonyEvent->getSubject(),
+            $symfonyEvent->getMarking(),
+            $symfonyEvent->getTransition(),
+            $symfonyEvent->getWorkflow(),
+            $symfonyEvent->getContext()
+        );
     }
 }

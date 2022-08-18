@@ -7,5 +7,4 @@ namespace ZeroDaHero\LaravelWorkflow\Events;
  */
 class TransitionEvent extends BaseEvent
 {
-    //
 }

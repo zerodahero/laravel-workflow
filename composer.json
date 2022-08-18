@@ -1,16 +1,16 @@
 {
     "name": "zerodahero/laravel-workflow",
     "description": "Integerate Symfony Workflow component into Laravel.",
-    "keywords": ["workflow", "symfony", "laravel", "laravel7"],
+    "keywords": ["workflow", "symfony", "laravel", "laravel7", "laravel8"],
     "license": "MIT",
     "require": {
-        "php": ">=7.2",
-        "symfony/workflow": "^5.0",
-        "symfony/process": "^5.0",
-        "symfony/event-dispatcher": "^5.0",
-        "illuminate/console": "^8.0",
-        "illuminate/support": "^8.0",
-        "illuminate/contracts": "^8.0"
+        "php": "^7.4|^8.0|^8.1",
+        "symfony/workflow": "^6.0",
+        "symfony/process": "^6.0",
+        "symfony/event-dispatcher-contracts": "^2.4|^3.0",
+        "illuminate/console": "^8.0|^9.0",
+        "illuminate/support": "^8.0|^9.0",
+        "illuminate/contracts": "^8.0|^9.0"
     },
     "autoload": {
         "psr-4": {
@@ -37,9 +37,10 @@
     },
     "require-dev": {
         "mockery/mockery": "^1.2",
-        "phpunit/phpunit": "^8.0",
-        "symfony/var-dumper": "^5.0",
-        "fzaninotto/faker": "^1.9",
-        "orchestra/testbench": "^5.2"
+        "phpunit/phpunit": "^9.0",
+        "symfony/var-dumper": "^6.0",
+        "fakerphp/faker": "^1.13",
+        "orchestra/testbench": "^6.0|^7.0",
+        "symfony/contracts": "^2.3"
     }
 }

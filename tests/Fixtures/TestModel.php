@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\Fixtures;
 
 /**
@@ -19,6 +20,7 @@ class TestModel
 
         if (method_exists($this, $method)) {
             $this->$method($value);
+
             return;
         }
 

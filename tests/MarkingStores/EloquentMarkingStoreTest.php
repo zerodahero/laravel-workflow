@@ -2,10 +2,10 @@
 
 namespace Tests\MarkingStores;
 
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\Workflow\Marking;
 use Tests\Fixtures\TestModel;
+use PHPUnit\Framework\TestCase;
 use Tests\Fixtures\TestModelMutator;
+use Symfony\Component\Workflow\Marking;
 use ZeroDaHero\LaravelWorkflow\MarkingStores\EloquentMarkingStore;
 
 class EloquentMarkingStoreTest extends TestCase
@@ -19,7 +19,9 @@ class EloquentMarkingStoreTest extends TestCase
 
     /**
      * @test
-     * @dataProvider subjectDataProvider
+     * @dataProvider providesSubjects
+     *
+     * @param mixed $subject
      */
     public function testSingleStateMarking($subject)
     {
@@ -38,17 +40,19 @@ class EloquentMarkingStoreTest extends TestCase
         $this->assertEquals([$newMarking => 1], $setMarking->getPlaces());
     }
 
-    public function subjectDataProvider()
+    public function providesSubjects()
     {
         return [
             [new TestModel()],
-            [new TestModelMutator()]
+            [new TestModelMutator()],
         ];
     }
 
     /**
      * @test
-     * @dataProvider subjectDataProvider
+     * @dataProvider providesSubjects
+     *
+     * @param mixed $subject
      */
     public function testMultiStateMarking($subject)
     {
@@ -65,5 +69,36 @@ class EloquentMarkingStoreTest extends TestCase
         $setMarking = $store->getMarking($subject);
         $this->assertInstanceOf(Marking::class, $setMarking);
         $this->assertEquals($newMarking, $setMarking->getPlaces());
+    }
+
+    /**
+     * @test
+     * @dataProvider providesTypeSafeScenarios
+     *
+     * @param mixed $markingValue
+     * @param mixed $expectedMarkingValue
+     * @param mixed $expectedMarkingKey
+     */
+    public function testTypeSafeMarkings($markingValue, $expectedMarkingKey)
+    {
+        $store = new EloquentMarkingStore(true, 'marking');
+
+        $subject = new TestModel();
+
+        $subject->attributes['marking'] = $markingValue;
+
+        $marking = $store->getMarking($subject);
+        $this->assertInstanceOf(Marking::class, $marking);
+        $this->assertEquals([$expectedMarkingKey => 1], $marking->getPlaces());
+    }
+
+    public function providesTypeSafeScenarios()
+    {
+        return [
+            [0, '0'],
+            ['0', '0'],
+            [false, ''], // ick
+            ['false', 'false'],
+        ];
     }
 }

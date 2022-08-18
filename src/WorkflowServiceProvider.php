@@ -3,10 +3,8 @@
 namespace ZeroDaHero\LaravelWorkflow;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Events\Dispatcher;
 
-/**
- * @author Boris Koumondji <brexis@yahoo.fr>
- */
 class WorkflowServiceProvider extends ServiceProvider
 {
     protected $commands = [
@@ -23,8 +21,8 @@ class WorkflowServiceProvider extends ServiceProvider
         $configPath = $this->configPath();
 
         $this->publishes([
-            "${configPath}/workflow.php" => config_path('workflow.php'),
-            "${configPath}/workflow_registry.php" => config_path('workflow_registry.php')
+            "${configPath}/workflow.php" => $this->publishPath('workflow.php'),
+            "${configPath}/workflow_registry.php" => $this->publishPath('workflow_registry.php'),
         ], 'config');
     }
 
@@ -43,15 +41,11 @@ class WorkflowServiceProvider extends ServiceProvider
         $this->commands($this->commands);
 
         $this->app->singleton('workflow', function ($app) {
-            $workflowConfigs = $app->make('config')->get('workflow');
+            $workflowConfigs = $app->make('config')->get('workflow', []);
             $registryConfig = $app->make('config')->get('workflow_registry');
-            return new WorkflowRegistry($workflowConfigs, $registryConfig);
-        });
-    }
 
-    protected function configPath()
-    {
-        return __DIR__ . '/../config';
+            return new WorkflowRegistry($workflowConfigs, $registryConfig, $app->make(Dispatcher::class));
+        });
     }
 
     /**
@@ -62,5 +56,17 @@ class WorkflowServiceProvider extends ServiceProvider
     public function provides()
     {
         return ['workflow'];
+    }
+
+    protected function configPath()
+    {
+        return __DIR__ . '/../config';
+    }
+
+    protected function publishPath($configFile)
+    {
+        return (function_exists('config_path'))
+            ? config_path($configFile)
+            : base_path('config/' . $configFile);
     }
 }
