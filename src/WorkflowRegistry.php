@@ -57,7 +57,7 @@ class WorkflowRegistry
      *
      * @throws \ReflectionException
      */
-    public function __construct(array $config, array $registryConfig = null, EventsDispatcher $laravelDispatcher)
+    public function __construct(array $config, ?array $registryConfig = null, EventsDispatcher $laravelDispatcher)
     {
         $this->registry = new Registry();
         $this->config = $config;
