@@ -21,7 +21,7 @@ class GuardEvent extends BaseEvent
 {
     private SymfonyGuardEvent $symfonyProxyEvent;
 
-    public function __construct(object $subject, Marking $marking, Transition $transition, WorkflowInterface $workflow = null)
+    public function __construct(object $subject, Marking $marking, Transition $transition, ?WorkflowInterface $workflow = null)
     {
         parent::__construct($subject, $marking, $transition, $workflow);
 
