@@ -12,6 +12,7 @@ use Symfony\Component\Workflow\Workflow;
 use Symfony\Component\Workflow\StateMachine;
 use ZeroDaHero\LaravelWorkflow\WorkflowRegistry;
 use Symfony\Component\Workflow\MarkingStore\MethodMarkingStore;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ZeroDaHero\LaravelWorkflow\MarkingStores\EloquentMarkingStore;
 
 class WorkflowRegistryTest extends BaseWorkflowTestCase
@@ -51,8 +52,6 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
         $workflow = $registry->get($subject);
 
         $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
-        $markingStoreProp->setAccessible(true);
-
         $markingStore = $markingStoreProp->getValue($workflow);
 
         $this->assertInstanceof(Workflow::class, $workflow);
@@ -90,8 +89,6 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
         $workflow = $registry->get($subject);
 
         $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
-        $markingStoreProp->setAccessible(true);
-
         $markingStore = $markingStoreProp->getValue($workflow);
 
         $this->assertInstanceOf(StateMachine::class, $workflow);
@@ -130,8 +127,6 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
         $workflow = $registry->get($subject);
 
         $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
-        $markingStoreProp->setAccessible(true);
-
         $markingStore = $markingStoreProp->getValue($workflow);
 
         $this->assertInstanceOf(StateMachine::class, $workflow);
@@ -173,8 +168,6 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
         $workflow = $registry->get($subject);
 
         $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
-        $markingStoreProp->setAccessible(true);
-
         $markingStore = $markingStoreProp->getValue($workflow);
 
         $this->assertInstanceof(StateMachine::class, $workflow);
@@ -220,8 +213,6 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
         $workflow = $registry->get($subject);
 
         $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
-        $markingStoreProp->setAccessible(true);
-
         $markingStore = $markingStoreProp->getValue($workflow);
 
         $this->assertInstanceof(StateMachine::class, $workflow);
@@ -262,8 +253,6 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
         $workflow = $registry->get($subject);
 
         $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
-        $markingStoreProp->setAccessible(true);
-
         $markingStore = $markingStoreProp->getValue($workflow);
 
         $this->assertInstanceof(Workflow::class, $workflow);
@@ -304,8 +293,6 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
         $workflow = $registry->get($subject);
 
         $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
-        $markingStoreProp->setAccessible(true);
-
         $markingStore = $markingStoreProp->getValue($workflow);
 
         $this->assertInstanceof(Workflow::class, $workflow);
@@ -346,8 +333,6 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
         $workflow = $registry->get($subject);
 
         $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
-        $markingStoreProp->setAccessible(true);
-
         $markingStore = $markingStoreProp->getValue($workflow);
 
         $this->assertInstanceof(Workflow::class, $workflow);
@@ -359,11 +344,7 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
         $this->assertEquals('b', $subject->getState());
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider providesAutomaticMarkingStoreScenarios
-     */
+    #[DataProvider('providesAutomaticMarkingStoreScenarios')]
     public function testIfMarkingStoreIsAutomatic(array $typeConfig, bool $expectSingleState)
     {
         $config = [
@@ -388,8 +369,6 @@ class WorkflowRegistryTest extends BaseWorkflowTestCase
         $workflow = $registry->get($subject);
 
         $markingStoreProp = new ReflectionProperty(Workflow::class, 'markingStore');
-        $markingStoreProp->setAccessible(true);
-
         $markingStore = $markingStoreProp->getValue($workflow);
 
         $this->assertInstanceof(Workflow::class, $workflow);

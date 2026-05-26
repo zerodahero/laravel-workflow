@@ -14,6 +14,7 @@ use ZeroDaHero\LaravelWorkflow\Events\AnnounceEvent;
 use ZeroDaHero\LaravelWorkflow\Events\CompletedEvent;
 use ZeroDaHero\LaravelWorkflow\Events\TransitionEvent;
 use Illuminate\Contracts\Events\Dispatcher as EventsDispatcher;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Workflow\Exception\NotEnabledTransitionException;
 
 class WorkflowEventsTest extends BaseWorkflowTestCase
@@ -119,11 +120,7 @@ class WorkflowEventsTest extends BaseWorkflowTestCase
         $this->assertEventSetDispatched('guard', 't2');
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider providesEventsToDispatchScenarios
-     */
+    #[DataProvider('providesEventsToDispatchScenarios')]
     public function testIfWorkflowOnlyEmitsSpecificEvents(?array $eventsToDispatch, array $eventsToExpect)
     {
         Event::fake();

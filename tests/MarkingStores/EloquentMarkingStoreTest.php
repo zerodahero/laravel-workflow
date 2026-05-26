@@ -4,6 +4,7 @@ namespace Tests\MarkingStores;
 
 use Tests\Fixtures\TestModel;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Fixtures\TestModelMutator;
 use Symfony\Component\Workflow\Marking;
 use ZeroDaHero\LaravelWorkflow\MarkingStores\EloquentMarkingStore;
@@ -17,13 +18,7 @@ class EloquentMarkingStoreTest extends TestCase
         $this->faker = \Faker\Factory::create();
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider providesSubjects
-     *
-     * @param mixed $subject
-     */
+    #[DataProvider('providesSubjects')]
     public function testSingleStateMarking($subject)
     {
         $store = new EloquentMarkingStore(true, 'marking');
@@ -49,13 +44,7 @@ class EloquentMarkingStoreTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider providesSubjects
-     *
-     * @param mixed $subject
-     */
+    #[DataProvider('providesSubjects')]
     public function testMultiStateMarking($subject)
     {
         $store = new EloquentMarkingStore(false, 'marking');
@@ -73,15 +62,7 @@ class EloquentMarkingStoreTest extends TestCase
         $this->assertEquals($newMarking, $setMarking->getPlaces());
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider providesTypeSafeScenarios
-     *
-     * @param mixed $markingValue
-     * @param mixed $expectedMarkingValue
-     * @param mixed $expectedMarkingKey
-     */
+    #[DataProvider('providesTypeSafeScenarios')]
     public function testTypeSafeMarkings($markingValue, $expectedMarkingKey)
     {
         $store = new EloquentMarkingStore(true, 'marking');

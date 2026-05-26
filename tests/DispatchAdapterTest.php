@@ -7,7 +7,6 @@ use stdClass;
 use PHPUnit\Framework\TestCase;
 use Tests\Helpers\CanAccessProtected;
 use Symfony\Component\Workflow\Marking;
-use Symfony\Component\Workflow\Workflow;
 use Symfony\Component\Workflow\Transition;
 use Illuminate\Contracts\Events\Dispatcher;
 use ZeroDaHero\LaravelWorkflow\Events\BaseEvent;
@@ -20,6 +19,7 @@ use ZeroDaHero\LaravelWorkflow\Events\AnnounceEvent;
 use ZeroDaHero\LaravelWorkflow\Events\WorkflowEvent;
 use ZeroDaHero\LaravelWorkflow\Events\CompletedEvent;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ZeroDaHero\LaravelWorkflow\Events\TransitionEvent;
 use ZeroDaHero\LaravelWorkflow\Events\DispatcherAdapter;
 
@@ -28,19 +28,7 @@ class DispatchAdapterTest extends TestCase
     use CanAccessProtected;
     use MockeryPHPUnitIntegration;
 
-    /**
-     * @test
-     *
-     * @dataProvider providesEventScenarios
-     *
-     * @param mixed $expectedEvent
-     * @param mixed $event
-     * @param mixed $eventName
-     * @param mixed $expectedPackageEvent
-     * @param mixed $symfonyEvent
-     * @param mixed $eventDotName
-     * @param mixed $expectedDotName
-     */
+    #[DataProvider('providesEventScenarios')]
     public function testAdaptsSymfonyEventsToLaravel($expectedPackageEvent, $symfonyEvent, $eventDotName, $expectedDotName)
     {
         $mockDispatcher = Mockery::mock(Dispatcher::class);
