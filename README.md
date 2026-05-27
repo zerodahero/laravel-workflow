@@ -19,6 +19,7 @@ composer require zerodahero/laravel-workflow
 | ^5.0 | 10.x, 11.x |
 | ^6.0 | 10.x, 11.x |
 | ^6.1 | 10.x, 11.x, 12.x |
+| ^6.2 | 10.x, 11.x, 12.x, 13.x |
 
 ## Upgrade from v5 to v6
 
