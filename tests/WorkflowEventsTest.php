@@ -4,6 +4,7 @@ namespace Tests;
 
 use Tests\Fixtures\TestObject;
 use Illuminate\Support\Facades\Event;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Workflow\WorkflowEvents;
 use ZeroDaHero\LaravelWorkflow\WorkflowRegistry;
 use ZeroDaHero\LaravelWorkflow\Events\EnterEvent;
@@ -14,7 +15,6 @@ use ZeroDaHero\LaravelWorkflow\Events\AnnounceEvent;
 use ZeroDaHero\LaravelWorkflow\Events\CompletedEvent;
 use ZeroDaHero\LaravelWorkflow\Events\TransitionEvent;
 use Illuminate\Contracts\Events\Dispatcher as EventsDispatcher;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Workflow\Exception\NotEnabledTransitionException;
 
 class WorkflowEventsTest extends BaseWorkflowTestCase

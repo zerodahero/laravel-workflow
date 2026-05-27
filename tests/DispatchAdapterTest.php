@@ -9,6 +9,7 @@ use Tests\Helpers\CanAccessProtected;
 use Symfony\Component\Workflow\Marking;
 use Symfony\Component\Workflow\Transition;
 use Illuminate\Contracts\Events\Dispatcher;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ZeroDaHero\LaravelWorkflow\Events\BaseEvent;
 use Symfony\Component\Workflow\WorkflowInterface;
 use ZeroDaHero\LaravelWorkflow\Events\EnterEvent;
@@ -19,7 +20,6 @@ use ZeroDaHero\LaravelWorkflow\Events\AnnounceEvent;
 use ZeroDaHero\LaravelWorkflow\Events\WorkflowEvent;
 use ZeroDaHero\LaravelWorkflow\Events\CompletedEvent;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use PHPUnit\Framework\Attributes\DataProvider;
 use ZeroDaHero\LaravelWorkflow\Events\TransitionEvent;
 use ZeroDaHero\LaravelWorkflow\Events\DispatcherAdapter;
 

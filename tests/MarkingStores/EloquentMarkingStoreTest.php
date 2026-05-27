@@ -4,9 +4,9 @@ namespace Tests\MarkingStores;
 
 use Tests\Fixtures\TestModel;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\Fixtures\TestModelMutator;
 use Symfony\Component\Workflow\Marking;
+use PHPUnit\Framework\Attributes\DataProvider;
 use ZeroDaHero\LaravelWorkflow\MarkingStores\EloquentMarkingStore;
 
 class EloquentMarkingStoreTest extends TestCase
