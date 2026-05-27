@@ -10,16 +10,17 @@ composer require zerodahero/laravel-workflow
 
 ## Laravel Support
 
-| Package Version | Laravel Version Support | 
-| --- | --- |
-| ^2.0 | 5.x |
-| ^3.0 | 7.x |
-| ^3.2 | 8.x |
-| ^4.0 | 9.x, 10.x |
-| ^5.0 | 10.x, 11.x |
-| ^6.0 | 10.x, 11.x |
-| ^6.1 | 10.x, 11.x, 12.x |
-| ^6.2 | 10.x, 11.x, 12.x, 13.x |
+| Package Version | Laravel Version Support | Notes |
+| --- | --- | --- |
+| ^2.0 | 5.x ||
+| ^3.0 | 7.x ||
+| ^3.2 | 8.x ||
+| ^4.0 | 9.x, 10.x ||
+| ^5.0 | 10.x, 11.x ||
+| ^6.0 | 10.x, 11.x ||
+| ^6.1 | 10.x, 11.x, 12.x ||
+| ^6.2 | 10.x, 11.x, 12.x | Adds php 8.4 support |
+| ^6.3 | 10.x, 11.x, 12.x, 13.x ||
 
 ## Upgrade from v5 to v6
 
