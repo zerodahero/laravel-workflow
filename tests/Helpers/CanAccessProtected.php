@@ -19,7 +19,6 @@ trait CanAccessProtected
     {
         $reflection = new ReflectionClass(get_class($object));
         $method = $reflection->getMethod($methodName);
-        $method->setAccessible(true);
 
         return $method->invokeArgs($object, $parameters);
     }
@@ -35,7 +34,6 @@ trait CanAccessProtected
     public function getProtectedProperty(&$object, $propertyName)
     {
         $property = (new ReflectionClass($object))->getProperty($propertyName);
-        $property->setAccessible(true);
 
         return $property->getValue($object);
     }
