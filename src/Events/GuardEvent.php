@@ -52,12 +52,7 @@ class GuardEvent extends BaseEvent
      */
     public static function newFromBase(Event $symfonyEvent)
     {
-        $instance = new static(
-            $symfonyEvent->getSubject(),
-            $symfonyEvent->getMarking(),
-            $symfonyEvent->getTransition(),
-            $symfonyEvent->getWorkflow()
-        );
+        $instance = parent::newFromBase($symfonyEvent);
 
         $instance->symfonyProxyEvent = $symfonyEvent;
 
