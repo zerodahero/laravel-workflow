@@ -48,7 +48,7 @@ abstract class BaseEvent extends Event
             $symfonyEvent->getSubject(),
             $symfonyEvent->getMarking(),
             $symfonyEvent->getTransition(),
-            $symfonyEvent->getWorkflow()
+            Workflow::get($symfonyEvent->getSubject(), $symfonyEvent->getWorkflowName())
         );
     }
 }
