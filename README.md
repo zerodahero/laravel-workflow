@@ -12,15 +12,17 @@ composer require zerodahero/laravel-workflow
 
 | Package Version | Laravel Version Support | Notes |
 | --- | --- | --- |
-| ^2.0 | 5.x ||
-| ^3.0 | 7.x ||
-| ^3.2 | 8.x ||
-| ^4.0 | 9.x, 10.x ||
-| ^5.0 | 10.x, 11.x ||
-| ^6.0 | 10.x, 11.x ||
-| ^6.1 | 10.x, 11.x, 12.x ||
+| ^2.0 | 5.x | |
+| ^3.0 | 7.x | |
+| ^3.2 | 8.x | |
+| ^4.0 | 9.x, 10.x | |
+| ^5.0 | 10.x, 11.x | |
+| ^6.0 | 10.x, 11.x | |
+| ^6.1 | 10.x, 11.x, 12.x | |
 | ^6.2 | 10.x, 11.x, 12.x | Adds php 8.4 support |
-| ^6.3 | 10.x, 11.x, 12.x, 13.x ||
+| ^6.3 | 10.x, 11.x, 12.x, 13.x | |
+| ^6.4 | 12.x, 13.x | Drops Laravel 10.x, 11.x support, and drops PHP 8.1 support|
+
 
 ## Upgrade from v5 to v6
 
@@ -164,7 +166,6 @@ return [
 
 If you are using a "multiple_state" type of workflow (i.e. you will be in multiple places simultaneously in your workflow), you will need your supported class/Eloquent model to cast the marking to an array. Read more in the [Laravel docs](https://laravel.com/docs/5.8/eloquent-mutators#array-and-json-casting).
 
-
 You may also add in metadata, similar to the Symfony implementation (note: it is not collected the same way as Symfony's implementation, but should work the same. Please open a pull request or issue if that's not the case.)
 
 ```php
@@ -224,6 +225,7 @@ class BlogPost extends Model
 
 }
 ```
+
 ## Usage
 
 ```php
@@ -266,6 +268,7 @@ $post->save();
 ```
 
 ## Symfony Workflow Usage
+
 Once you have the underlying Symfony workflow component, you can do anything you want, just like you would in Symfony. A couple examples are provided below, but be sure to take a look at the [Symfony docs](https://symfony.com/doc/current/workflow.html) to better understand what's going on here.
 
 ```php
@@ -294,6 +297,7 @@ $otherPlaceMetadata = $workflow->getMetadataStore()->getMetadata('max_num_of_wor
 ```
 
 ### Use the events
+
 This package provides a list of events fired during a transition
 
 ```php
@@ -569,21 +573,30 @@ return [
 ```
 
 ## Dump Workflows
+
 Symfony workflow uses GraphvizDumper to create the workflow image. You may need to install the `dot` command of [Graphviz](http://www.graphviz.org/)
 
-    php artisan workflow:dump workflow_name --class App\\BlogPost
+```
+php artisan workflow:dump workflow_name --class App\\BlogPost
+```
 
 You can change the image format with the `--format` option. By default the format is png.
 
-    php artisan workflow:dump workflow_name --format=jpg
+```
+php artisan workflow:dump workflow_name --format=jpg
+```
 
 Similar to [Symfony](https://symfony.com/doc/current/workflow/dumping-workflows.html#styling). You can use `--with-metadata` to include workflow's metadata
 
-    php artisan workflow:dump workflow_name --with-metadata
+```
+php artisan workflow:dump workflow_name --with-metadata
+```
 
 If you would like to output to a different directory than root, you can use the `--disk` and `--path` options to set the Storage disk (`local` by default) and path (`root_path()` by default).
 
-    php artisan workflow:dump workflow-name --class=App\\BlogPost --disk=s3 --path="workflows/diagrams/"
+```
+php artisan workflow:dump workflow-name --class=App\\BlogPost --disk=s3 --path="workflows/diagrams/"
+```
 
 ## Use in tracking mode
 
