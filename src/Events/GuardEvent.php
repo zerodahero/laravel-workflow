@@ -51,13 +51,13 @@ class GuardEvent extends BaseEvent
     /**
      * Creates a new instance from the base Symfony event
      */
-    public static function newFromBase(Event $symfonyEvent)
+    public static function newFromBase(Event $symfonyEvent, ?WorkflowInterface $workflow = null)
     {
         $instance = new static(
             $symfonyEvent->getSubject(),
             $symfonyEvent->getMarking(),
             $symfonyEvent->getTransition(),
-            Workflow::get($symfonyEvent->getSubject(), $symfonyEvent->getWorkflowName())
+            $workflow ?? $symfonyEvent->getWorkflow()
         );
 
         $instance->symfonyProxyEvent = $symfonyEvent;

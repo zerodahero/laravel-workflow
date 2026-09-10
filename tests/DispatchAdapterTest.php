@@ -29,7 +29,7 @@ class DispatchAdapterTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     #[DataProvider('providesEventScenarios')]
-    public function testAdaptsSymfonyEventsToLaravel($expectedPackageEvent, $symfonyEvent, $eventDotName, $expectedDotName)
+    public function testAdaptsSymfonyEventsToLaravel($expectedPackageEvent, $symfonyEvent, $eventDotName, $expectedDotName, $workflow)
     {
         $mockDispatcher = Mockery::mock(Dispatcher::class);
 
@@ -50,6 +50,7 @@ class DispatchAdapterTest extends TestCase
             ->once()
             ->with($expectedDotName, $expectedPackageEvent);
         $adapter = new DispatcherAdapter($mockDispatcher);
+        $adapter->setWorkflow($workflow);
 
         $event = $adapter->dispatch($symfonyEvent, $eventDotName);
         $this->assertInstanceOf($expectedPackageEvent, $event);
@@ -99,6 +100,7 @@ class DispatchAdapterTest extends TestCase
                         $symfonyEvent,
                         $eventName,
                         $eventName,
+                        $mockWorkflow,
                     ];
                 }
 
@@ -107,6 +109,7 @@ class DispatchAdapterTest extends TestCase
                     $symfonyEvent,
                     null,
                     get_class($symfonyEvent),
+                    $mockWorkflow,
                 ];
             }
         }

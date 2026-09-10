@@ -4,6 +4,7 @@ namespace ZeroDaHero\LaravelWorkflow\Events;
 
 use Workflow;
 use Symfony\Component\Workflow\Event\Event;
+use Symfony\Component\Workflow\WorkflowInterface;
 
 /**
  * @method \Symfony\Component\Workflow\Marking getMarking()
@@ -41,14 +42,18 @@ abstract class BaseEvent extends Event
 
     /**
      * Creates a new instance from the base Symfony event
+     *
+     * Pass the workflow whenever it is known. Reading it back off the Symfony
+     * event is deprecated since Symfony 7.3, so that is only a fallback for
+     * callers that cannot supply it.
      */
-    public static function newFromBase(Event $symfonyEvent)
+    public static function newFromBase(Event $symfonyEvent, ?WorkflowInterface $workflow = null)
     {
         return new static(
             $symfonyEvent->getSubject(),
             $symfonyEvent->getMarking(),
             $symfonyEvent->getTransition(),
-            Workflow::get($symfonyEvent->getSubject(), $symfonyEvent->getWorkflowName())
+            $workflow ?? $symfonyEvent->getWorkflow()
         );
     }
 }

@@ -26,13 +26,14 @@ class EventTest extends TestCase
     public function testSerializesAndUnserializes()
     {
         $subject = new TestModel();
+        $workflow = Workflow::get($subject, 'straight');
         $baseEvent = new \Symfony\Component\Workflow\Event\Event(
             $subject,
             new \Symfony\Component\Workflow\Marking(['here' => 1]),
             new \Symfony\Component\Workflow\Transition('transition_name', 'here', 'there'),
-            Workflow::get($subject, 'straight')
+            $workflow
         );
-        $event = TransitionEvent::newFromBase($baseEvent);
+        $event = TransitionEvent::newFromBase($baseEvent, $workflow);
         $serialized = serialize($event);
 
         $this->assertIsString($serialized);
@@ -72,14 +73,15 @@ class EventTest extends TestCase
     public function testGuardEventGuards()
     {
         $subject = new TestModel();
+        $workflow = Workflow::get($subject, 'straight');
         $symfonyEvent = new SymfonyGuardEvent(
             $subject,
             new \Symfony\Component\Workflow\Marking(['here' => 1]),
             new \Symfony\Component\Workflow\Transition('transition_name', 'here', 'there'),
-            Workflow::get($subject, 'straight')
+            $workflow
         );
 
-        $event = GuardEvent::newFromBase($symfonyEvent);
+        $event = GuardEvent::newFromBase($symfonyEvent, $workflow);
 
         $event->setBlocked(true);
 

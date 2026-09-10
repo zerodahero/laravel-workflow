@@ -1,0 +1,5 @@
+[tools]
+php = "8"
+
+[env]
+_.path = ['{{config_root}}/vendor/bin']

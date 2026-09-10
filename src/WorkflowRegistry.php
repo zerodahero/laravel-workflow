@@ -11,7 +11,6 @@ use Symfony\Component\Workflow\DefinitionBuilder;
 use ZeroDaHero\LaravelWorkflow\Events\DispatcherAdapter;
 use Symfony\Component\Workflow\Metadata\InMemoryMetadataStore;
 use Illuminate\Contracts\Events\Dispatcher as EventsDispatcher;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Workflow\Exception\InvalidArgumentException;
 use Symfony\Component\Workflow\MarkingStore\MarkingStoreInterface;
 use ZeroDaHero\LaravelWorkflow\MarkingStores\EloquentMarkingStore;
@@ -37,7 +36,7 @@ class WorkflowRegistry
     protected $registryConfig;
 
     /**
-     * @var EventDispatcherInterface
+     * @var DispatcherAdapter
      */
     protected $dispatcher;
 
@@ -277,15 +276,23 @@ class WorkflowRegistry
         MarkingStoreInterface $markingStore,
         ?array $eventsToDispatch = null
     ) {
+        // Each workflow gets its own dispatcher so that the dispatcher can hand
+        // the workflow to the events it translates, rather than looking it up.
+        $dispatcher = clone $this->dispatcher;
+
         if (isset($workflowData['class'])) {
             $className = $workflowData['class'];
 
-            return new $className($definition, $markingStore, $this->dispatcher, $name);
+            $workflow = new $className($definition, $markingStore, $dispatcher, $name);
         } elseif (isset($workflowData['type']) && $workflowData['type'] === 'state_machine') {
-            return new StateMachine($definition, $markingStore, $this->dispatcher, $name);
+            $workflow = new StateMachine($definition, $markingStore, $dispatcher, $name);
         } else {
-            return new Workflow($definition, $markingStore, $this->dispatcher, $name, $eventsToDispatch);
+            $workflow = new Workflow($definition, $markingStore, $dispatcher, $name, $eventsToDispatch);
         }
+
+        $dispatcher->setWorkflow($workflow);
+
+        return $workflow;
     }
 
     /**

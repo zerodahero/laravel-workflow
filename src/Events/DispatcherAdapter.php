@@ -3,6 +3,7 @@
 namespace ZeroDaHero\LaravelWorkflow\Events;
 
 use Illuminate\Contracts\Events\Dispatcher;
+use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class DispatcherAdapter implements EventDispatcherInterface
@@ -21,12 +22,33 @@ class DispatcherAdapter implements EventDispatcherInterface
 
     private $plainEvents;
 
+    /**
+     * The workflow this adapter dispatches events for.
+     *
+     * Symfony events carry their own workflow, but the getter for it is
+     * deprecated since Symfony 7.3. Holding the instance here lets us hand it
+     * to the translated event instead of looking it up again.
+     *
+     * @var WorkflowInterface|null
+     */
+    private $workflow;
+
     public function __construct(Dispatcher $dispatcher)
     {
         $this->dispatcher = $dispatcher;
         $this->plainEvents = array_map(function ($event) {
             return "workflow.{$event}";
         }, array_keys(static::EVENT_MAP));
+    }
+
+    /**
+     * Sets the workflow this adapter dispatches events for
+     *
+     * @return void
+     */
+    public function setWorkflow(WorkflowInterface $workflow)
+    {
+        $this->workflow = $workflow;
     }
 
     /**
@@ -67,18 +89,18 @@ class DispatcherAdapter implements EventDispatcherInterface
     private function translateEvent(?string $eventName, object $symfonyEvent): object
     {
         if (is_null($eventName)) {
-            return WorkflowEvent::newFromBase($symfonyEvent);
+            return WorkflowEvent::newFromBase($symfonyEvent, $this->workflow);
         }
 
         $event = $this->parseWorkflowEventFromEventName($eventName);
 
         if (! $event) {
-            return WorkflowEvent::newFromBase($symfonyEvent);
+            return WorkflowEvent::newFromBase($symfonyEvent, $this->workflow);
         }
 
         $translatedEventClass = static::EVENT_MAP[$event];
 
-        return $translatedEventClass::newFromBase($symfonyEvent);
+        return $translatedEventClass::newFromBase($symfonyEvent, $this->workflow);
     }
 
     private function parseWorkflowEventFromEventName(string $eventName)
